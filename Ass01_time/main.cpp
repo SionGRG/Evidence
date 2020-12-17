@@ -13,7 +13,7 @@ int main()
 
 ////////////////////////////////////////////////////////////
 	//initialsation - one time
-	Time time;
+/*	Time time;
 
 
 	Time time3(1, 1, 1);
@@ -68,7 +68,7 @@ int main()
 
 	//ct.readInTime();
 
-
+/*
 
 	cout << "\n\n__ Time t1\n";
 	Time t1;
@@ -90,7 +90,7 @@ int main()
 
 	cout << "\n\n__ t1.readInTime()\n";
 	t1.readInTime();
-	t1.displayTime();
+	t1.displayTime();*/
 //////////////////////////////////////////////////////////////
 
 	//initialsation - one time
