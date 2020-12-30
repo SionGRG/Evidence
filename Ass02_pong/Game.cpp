@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <ctime>
 
+#define SCREEN_WIDTH 1366
+#define SCREEN_HEIGHT 768
+
 //Ball	*****************************************************************
 
 	void Ball::Init(sf::RenderWindow& window, sf::Texture& tex, int batTexPosX, int batTexPosY, int batTexWidth, int batTexHeight, float batPosX, float batPosY)
@@ -136,23 +139,76 @@
 		bat2.Init(window, tex, 54, 5, 42, 140, 0.95f, 0.5f);
 	}
 	
-	void Game::Score(sf::RenderWindow& window, float dT)
+	void Game::Score(sf::RenderWindow& window, sf::Font font)
 	{
-	
+		sf::Text txtScore;					// score text											
+		sf::Text txtP1Score;				// Player 1 score text
+		sf::Text txtP2Score;				// Player 2 score text
+		
+		float scorePos = 40;				// half distance between player 1 and player 2 
+
+		/* score text */
+		txtScore.setFont(font);												// select the font
+		txtScore.setString("SCORE");										// set the string to display
+		txtScore.setCharacterSize(48);										// set the character size		
+		txtScore.setFillColor(sf::Color::White);							// set the color
+		txtScore.setStyle(sf::Text::Bold);									// set the text style
+		// center score text
+		sf::FloatRect scoreTxtRect = txtScore.getLocalBounds();
+		txtScore.setOrigin(scoreTxtRect.left + scoreTxtRect.width / 2.0f,
+			scoreTxtRect.top + scoreTxtRect.height / 2.0f);					// set score origin to the center of the score text
+		txtScore.setPosition(window.getSize().x/2,
+			window.getSize().y * .025f);									// set the position
+		
+		/* Player 1 score */
+		txtP1Score.setFont(font);											// select the font
+		txtP1Score.setString(to_string(p1Score));							// set the string to display
+		txtP1Score.setCharacterSize(72);									// set the character size		
+		txtP1Score.setFillColor(sf::Color::Red);							// set the color
+		txtP1Score.setStyle(sf::Text::Bold);								// set the text style
+		// center score text
+		sf::FloatRect p1TxtRect = txtP1Score.getLocalBounds();
+		txtP1Score.setOrigin(p1TxtRect.left + p1TxtRect.width / 2.0f,
+			p1TxtRect.top + p1TxtRect.height / 2.0f);						// set score origin to the center of the score text
+		txtP1Score.setPosition((window.getSize().x / 2) - scorePos,
+			window.getSize().y * .1f);										// set the position
+		
+		/* Player 2 score */
+		txtP2Score.setFont(font);											// select the font
+		txtP2Score.setString(to_string(p2Score));							// set the string to display
+		txtP2Score.setCharacterSize(72);									// set the character size		
+		txtP2Score.setFillColor(sf::Color::Blue);							// set the color
+		txtP2Score.setStyle(sf::Text::Bold);								// set the text style
+		// center score text
+		sf::FloatRect p2TxtRect = txtP2Score.getLocalBounds();
+		txtP2Score.setOrigin(p2TxtRect.left + p2TxtRect.width / 2.0f,
+			p2TxtRect.top + p2TxtRect.height / 2.0f);						// set score origin to the center of the score text
+		txtP2Score.setPosition((window.getSize().x / 2) + scorePos,
+			window.getSize().y * .1f);										// set the position
+
+		// Draw texts
+		window.draw(txtScore);
+		window.draw(txtP1Score);
+		window.draw(txtP2Score);
 	}
 
-	void Game::Record(sf::RenderWindow& window, float dT)
+	void Game::Record(sf::RenderWindow& window)
 	{
 		// Record player score and reset the ball position goes the beyond the player's bat
 		if (ball.spr.getPosition().x < (window.getSize().x * 0) + ball.spr.getOrigin().x)
 		{
-			Score(window, dT);
+			++p2Score;
 			ball.Reset(window);
 		}
 		if ((ball.spr.getPosition().x + ball.spr.getOrigin().x) > window.getSize().x)
 		{
-			Score(window, dT);
+			++p1Score;
 			ball.Reset(window);
+		}
+		if (p1Score == maxScore || p2Score == maxScore)
+		{
+			p1Score = 0;
+			p2Score = 0;
 		}
 	}
 	
@@ -183,37 +239,43 @@
 			ball.ChangeXDirection();
 		}
 	}
-	
-	void Game::Update(sf::RenderWindow& window, float dT)
+
+	void Game::Update(sf::RenderWindow& window, float dT, sf::Font font)
 	{
 		controls();
 		// Updates
 		ball.Update(window, dT);
 		bat1.Update(window, dT);
 		bat2.Update(window, dT);
-	
+
 		// Bounce the ball back
 		Bounce(bat1, bat2);
-		// Record player score
-		Record(window, dT);
+		// Record player score and Reset score if it reaches max score
+		Record(window);
 	}
 	
-	void Game::Render(sf::RenderWindow& window, float dT)
+	void Game::Render(sf::RenderWindow& window, float dT, sf::Font font)
 	{
-		// Renders
+		// Object Renders
 		ball.Render(window, dT);
 		bat1.Render(window, dT);
 		bat2.Render(window, dT);
+		
+		// Score
+		Score(window, font);
 	}
 
 	void Game::RunGame()
 	{
-		sf::RenderWindow window(sf::VideoMode(1366, 768), "Ass02_Pong");
+		sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Ass02_Pong");
 		
 		Game game;
 
 		sf::Texture texPong;
 		if (!texPong.loadFromFile("data/pongSprites.png"))
+			assert(false);
+		sf::Font fontPong;
+		if (!fontPong.loadFromFile("data/Airstream.ttf"))
 			assert(false);
 
 		game.Init(window, texPong);
@@ -232,11 +294,11 @@
 			clock.restart();
 
 			// Updates
-			game.Update(window, elapsedTime);
+			game.Update(window, elapsedTime, fontPong);
 			window.clear();
 
 			// Renders
-			game.Render(window, elapsedTime);
+			game.Render(window, elapsedTime, fontPong);
 
 			window.display();
 		}

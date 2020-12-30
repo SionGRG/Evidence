@@ -42,6 +42,7 @@ public:
 
 class Obj2D
 {
+private:
 public:
 	sf::Sprite spr;
 	Vec2 vel;
@@ -62,7 +63,6 @@ public:
 	*/
 	virtual void Init(sf::RenderWindow& window, sf::Texture& tex, int batTexPosX, int batTexPosY, int batTexWidth, int batTexHeight, float batPosX, float batPosY) = 0;
 };
-
 
 class Ball : public Obj2D
 {
@@ -88,6 +88,7 @@ public:
 
 class Bat : public Obj2D
 {
+private:
 public:
 	// Controls
 	sf::Keyboard::Key moveUp;
@@ -102,18 +103,27 @@ public:
 class Game
 {
 private:
-
 public:
 	Ball ball;
 	Bat bat1;
 	Bat bat2;
+	int p1Score = 0;
+	int p2Score = 0;
+	const int maxScore = 2;
 
 	void Init(sf::RenderWindow& window, sf::Texture& tex);
-	void Score(sf::RenderWindow& window, float dT);
-	void Record(sf::RenderWindow& window, float dT);
+	void Score(sf::RenderWindow& window, sf::Font font);
+	void Record(sf::RenderWindow& window);
 	void controls();
 	void Bounce(Bat bBat1, Bat bBat2);
-	void Update(sf::RenderWindow& window, float dT);
-	void Render(sf::RenderWindow& window, float dT);
+	void Update(sf::RenderWindow& window, float dT, sf::Font font); 
+	void Render(sf::RenderWindow& window, float dT, sf::Font font);
 	void RunGame();
+};
+
+class GameState
+{
+private:
+public:
+
 };
