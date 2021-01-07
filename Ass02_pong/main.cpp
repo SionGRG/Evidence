@@ -1,12 +1,12 @@
 #include <assert.h>
-#include "Game.h"
+#include "Definitions.h"
+#include "GameManager.h"
 
 using namespace std;
 
 //****************************************************************************
 int main()
 {
-	Game game;
-	game.RunGame();
+	Ass02_pong::GameManager(SCREEN_WIDTH, SCREEN_HEIGHT, GAME_TITLE);
 	return EXIT_SUCCESS;
 }

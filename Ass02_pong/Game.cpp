@@ -1,151 +1,42 @@
+#include <sstream>
+#include <iostream>
 #include "Game.h"
-#include <stdlib.h>
-#include <ctime>
 
-#define SCREEN_WIDTH 1366
-#define SCREEN_HEIGHT 768
+namespace Ass02_pong
+{
+	Game::Game(GameDataRef data) : _data(data)
+	{
 
-//Ball	*****************************************************************
+	}
 
-	void Ball::Init(sf::RenderWindow& window, sf::Texture& tex, int batTexPosX, int batTexPosY, int batTexWidth, int batTexHeight, float batPosX, float batPosY)
+	void Game::Init()
 	{
-		spr.setTexture(tex, true);
-		//Hint: spr.setTextureRect(sf::IntRect{ 105, 5, 40, 40 });
-		spr.setTextureRect(sf::IntRect{ batTexPosX, batTexPosY, batTexWidth, batTexHeight });
-		//Hint: spr.setOrigin(20, 20);
-		float batOrgX = batTexWidth / 2;			// set origin().x to the center of the texture
-		float batOrgY = batTexHeight / 2;			// set origin().y to the center of the texture
-		spr.setOrigin(batOrgX, batOrgY);
-		//Hint: spr.setPosition(window.getSize().x * 0.5f, window.getSize().y * 0.5f);
-		spr.setPosition(window.getSize().x * batPosX, window.getSize().y * batPosY);
-	
-		// Get random numbers for the ball movement
-		srand(time(NULL));
-	}
-	
-	void Ball::Reset(sf::RenderWindow& window)
-	{
-		spr.setPosition(window.getSize().x * 0.5f, window.getSize().y * 0.5f);
-		ChangeXDirection();
-	}
-	
-	void Ball::ChangeXDirection()
-	{
-		xDir *= -1;		// Change the direction of the ball in the x direction
-	}
-	float Ball::ChangeYDirection(sf::RenderWindow& window, float& cDirY)
-	{
-		// Check for hitting walls
-		if (spr.getPosition().y < (window.getSize().y * 0) + spr.getOrigin().y)
-		{
-			cDirY = cDirY * -1;				// bounce the ball off the wall
-			return cDirY;
-		}
-		if ((spr.getPosition().y + spr.getOrigin().y) > window.getSize().y)
-		{
-			cDirY = cDirY * -1;				// bounce the ball off the wall
-			return cDirY;
-		}
-	}
-	
-	void Ball::Movement(sf::RenderWindow& window, float dT)
-	{
-		// Move the ball in the random position
-		xVel = GetRandomNumber(2, -2);
-		yVel = GetRandomNumber(2, -2);
-	
-		ChangeYDirection(window, yDir);
-	
-		// Simulation
-		vel = Vec2{ xDir * xVel * SPEED , yDir * yVel * SPEED };
-		Vec2 pos{ spr.getPosition() };
-		pos += vel * dT;
-	
-		spr.setPosition(pos);
-	}
-	
-	void Ball::Update(sf::RenderWindow& window, float dT)
-	{
-		Movement(window, dT);
-	}
-	void Ball::Render(sf::RenderWindow& window, float dT)
-	{
-		Obj2D::Render(window, dT);
-		// Fire trails
-		// Sparkles
-	}
-	
-//Bat	*****************************************************************
-	
-	void Bat::Init(sf::RenderWindow& window, sf::Texture& tex, int batTexPosX, int batTexPosY, int batTexWidth, int batTexHeight, float batPosX, float batPosY)
-	{
-		spr.setTexture(tex, true);
-		//Hint: example: spr.setTextureRect(sf::IntRect{ 4, 5, 42, 140 });
-		spr.setTextureRect(sf::IntRect{ batTexPosX, batTexPosY, batTexWidth, batTexHeight });
-		//Hint: example: spr.setOrigin(21, 70);
-		float batOrgX = batTexWidth / 2;					// set origin().x to the center of the texture
-		float batOrgY = batTexHeight / 2;					// set origin().y to the center of the texture
-		spr.setOrigin(batOrgX, batOrgY);
-		//Hint: example: spr.setPosition(window.getSize().x * 0.05f, window.getSize().y * 0.5f);
-		spr.setPosition(window.getSize().x * batPosX, window.getSize().y * batPosY);
-	}
-	
-	void Bat::Movement(sf::RenderWindow& window, float dT)
-	{
-		// Bat movement control
-		float SPEED = 350;
-		if (sf::Keyboard::isKeyPressed(moveUp))
-		{
-			if ((spr.getPosition().y + 13) <= spr.getOrigin().y)
-				SPEED = 0;					// Stop the bat if it reaches to the top of the screen
-			else
-				SPEED = SPEED;
-			vel = Vec2{ 0, -SPEED };
-		}
-		else if (sf::Keyboard::isKeyPressed(moveDown))
-		{
-			if ((spr.getPosition().y - 13) >= (window.getSize().y - spr.getOrigin().y))
-				SPEED = 0;					// Stop the bat if it reaches to the bottom of the screen
-			else
-				SPEED = SPEED;
-			vel = Vec2{ 0, SPEED };
-		}
-	}
-	void Bat::Update(sf::RenderWindow& window, float dT)
-	{
-		Movement(window, dT);
-		// Simulation
-		Vec2 pos{ spr.getPosition() };
-		pos += vel * dT;
-	
-		spr.setPosition(pos);
-	
-	}
-	void Bat::Render(sf::RenderWindow& window, float dT)
-	{
-		Obj2D::Render(window, dT);
-	}
-	
-//Game	*****************************************************************
-	
-	void Game::Init(sf::RenderWindow& window, sf::Texture& tex)
-	{
-	
+		// Background
+		_data->assets.LoadTexture("Game Background", GAME_BACKGROUND_FILEPATH);
+		_background.setTexture(this->_data->assets.GetTexture("Game Background"));
+		// Pong Spritesheet
+		_data->assets.LoadTexture("Pong Sprite Sheet", SPRITESHEET_PONG_FILEPATH);
+		_pongSheet = this->_data->assets.GetTexture("Pong Sprite Sheet");
+		// Font Airstream
+		_data->assets.LoadFont("Airstream Font", FONT_AIRSTREAM_FILEPATH);
+		_fontAirstream = this->_data->assets.GetFont("Airstream Font");
+
 		// Ball
-		ball.Init(window, tex, 105, 5, 40, 40, 0.5f, 0.5f);
-	
+		ball.Init(_pongSheet, 105, 5, 40, 40, 0.5f, 0.5f);
+
 		// Players
-		bat1.Init(window, tex, 4, 5, 42, 140, 0.05f, 0.5f);
-		bat2.Init(window, tex, 54, 5, 42, 140, 0.95f, 0.5f);
+		bat1.Init(_pongSheet, 4, 5, 42, 140, 0.05f, 0.5f);
+		bat2.Init(_pongSheet, 54, 5, 42, 140, 0.95f, 0.5f);
+
 	}
-	
-	void Game::Score(sf::RenderWindow& window, sf::Font font)
+
+	void Game::Score(sf::Font font)
 	{
-		sf::Text txtScore;					// score text											
-		sf::Text txtP1Score;				// Player 1 score text
-		sf::Text txtP2Score;				// Player 2 score text
-		
-		float scorePos = 40;				// half distance between player 1 and player 2 
+		sf::Text txtScore;									// score text											
+		sf::Text txtP1Score;								// Player 1 score text
+		sf::Text txtP2Score;								// Player 2 score text
+
+		float scorePos = 40;								// half distance between player 1 and player 2 
 
 		/* score text */
 		txtScore.setFont(font);												// select the font
@@ -157,9 +48,9 @@
 		sf::FloatRect scoreTxtRect = txtScore.getLocalBounds();
 		txtScore.setOrigin(scoreTxtRect.left + scoreTxtRect.width / 2.0f,
 			scoreTxtRect.top + scoreTxtRect.height / 2.0f);					// set score origin to the center of the score text
-		txtScore.setPosition(window.getSize().x/2,
-			window.getSize().y * .025f);									// set the position
-		
+		txtScore.setPosition(SCREEN_WIDTH / 2,
+			SCREEN_HEIGHT * .025f);											// set the position
+
 		/* Player 1 score */
 		txtP1Score.setFont(font);											// select the font
 		txtP1Score.setString(to_string(p1Score));							// set the string to display
@@ -170,9 +61,9 @@
 		sf::FloatRect p1TxtRect = txtP1Score.getLocalBounds();
 		txtP1Score.setOrigin(p1TxtRect.left + p1TxtRect.width / 2.0f,
 			p1TxtRect.top + p1TxtRect.height / 2.0f);						// set score origin to the center of the score text
-		txtP1Score.setPosition((window.getSize().x / 2) - scorePos,
-			window.getSize().y * .1f);										// set the position
-		
+		txtP1Score.setPosition((SCREEN_WIDTH / 2) - scorePos,
+			SCREEN_HEIGHT * .1f);											// set the position
+
 		/* Player 2 score */
 		txtP2Score.setFont(font);											// select the font
 		txtP2Score.setString(to_string(p2Score));							// set the string to display
@@ -183,37 +74,53 @@
 		sf::FloatRect p2TxtRect = txtP2Score.getLocalBounds();
 		txtP2Score.setOrigin(p2TxtRect.left + p2TxtRect.width / 2.0f,
 			p2TxtRect.top + p2TxtRect.height / 2.0f);						// set score origin to the center of the score text
-		txtP2Score.setPosition((window.getSize().x / 2) + scorePos,
-			window.getSize().y * .1f);										// set the position
+		txtP2Score.setPosition((SCREEN_WIDTH / 2) + scorePos,
+			SCREEN_HEIGHT * .1f);											// set the position
 
 		// Draw texts
-		window.draw(txtScore);
-		window.draw(txtP1Score);
-		window.draw(txtP2Score);
+		_data->window.draw(txtScore);
+		_data->window.draw(txtP1Score);
+		_data->window.draw(txtP2Score);
 	}
 
-	void Game::Record(sf::RenderWindow& window)
+	void Game::Record()
 	{
 		// Record player score and reset the ball position goes the beyond the player's bat
-		if (ball.spr.getPosition().x < (window.getSize().x * 0) + ball.spr.getOrigin().x)
+		if (ball.spr.getPosition().x < (SCREEN_WIDTH * 0) + ball.spr.getOrigin().x)
 		{
 			++p2Score;
-			ball.Reset(window);
+			ball.Reset();
 		}
-		if ((ball.spr.getPosition().x + ball.spr.getOrigin().x) > window.getSize().x)
+		if ((ball.spr.getPosition().x + ball.spr.getOrigin().x) > SCREEN_WIDTH)
 		{
 			++p1Score;
-			ball.Reset(window);
+			ball.Reset();
 		}
 		if (p1Score == maxScore || p2Score == maxScore)
 		{
 			p1Score = 0;
 			p2Score = 0;
+			GameOver();
 		}
 	}
-	
-	void Game::controls()
+
+	void Game::GameOver()
 	{
+		_data->machine.AddState(StateRef(new GameOverState(_data)), false);
+	}
+
+	void Game::HandleInput()
+	{
+		sf::Event event;
+
+		while (_data->window.pollEvent(event))
+		{
+			if (sf::Event::Closed == event.type)
+			{
+				_data->window.close();
+			}
+		}
+
 		// set the player controls
 		//player 1
 		bat1.moveUp = sf::Keyboard::W;
@@ -222,7 +129,7 @@
 		bat2.moveUp = sf::Keyboard::Up;
 		bat2.moveDown = sf::Keyboard::Down;
 	}
-	
+
 	void Game::Bounce(Bat bBat1, Bat bBat2)
 	{
 		// Check for hitting bat
@@ -240,66 +147,34 @@
 		}
 	}
 
-	void Game::Update(sf::RenderWindow& window, float dT, sf::Font font)
+	void Game::Update(float dT)
 	{
-		controls();
+		// Controls
+		HandleInput();
 		// Updates
-		ball.Update(window, dT);
-		bat1.Update(window, dT);
-		bat2.Update(window, dT);
+		ball.Update(dT);
+		bat1.Update(dT);
+		bat2.Update(dT);
 
 		// Bounce the ball back
 		Bounce(bat1, bat2);
 		// Record player score and Reset score if it reaches max score
-		Record(window);
+		Record();
 	}
-	
-	void Game::Render(sf::RenderWindow& window, float dT, sf::Font font)
+
+	void Game::Render(float dT)
 	{
+		_data->window.clear();
+		_data->window.draw(_background);
 		// Object Renders
-		ball.Render(window, dT);
-		bat1.Render(window, dT);
-		bat2.Render(window, dT);
-		
-		// Score
-		Score(window, font);
+			//ball.Render(dT);
+			//bat1.Render(dT);
+			//bat2.Render(dT);
+		_data->window.draw(ball.spr);
+		_data->window.draw(bat1.spr);
+		_data->window.draw(bat2.spr);
+		// Score Renders
+		Score(_fontAirstream);
+		_data->window.display();
 	}
-
-	void Game::RunGame()
-	{
-		sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "Ass02_Pong");
-		
-		Game game;
-
-		sf::Texture texPong;
-		if (!texPong.loadFromFile("data/pongSprites.png"))
-			assert(false);
-		sf::Font fontPong;
-		if (!fontPong.loadFromFile("data/Airstream.ttf"))
-			assert(false);
-
-		game.Init(window, texPong);
-		sf::Clock clock;
-
-		while (window.isOpen())
-		{
-			sf::Event event;
-			while (window.pollEvent(event))
-			{
-				if (event.type == sf::Event::Closed)
-					window.close();
-			}
-
-			float elapsedTime = clock.getElapsedTime().asSeconds();
-			clock.restart();
-
-			// Updates
-			game.Update(window, elapsedTime, fontPong);
-			window.clear();
-
-			// Renders
-			game.Render(window, elapsedTime, fontPong);
-
-			window.display();
-		}
-	}
+}
