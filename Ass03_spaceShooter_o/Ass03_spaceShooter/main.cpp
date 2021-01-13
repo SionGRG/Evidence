@@ -5,12 +5,14 @@
 #include <vector>
 
 #include "WindowUtils.h"
-#include "Definitions.h"
 #include "Game.h"
 
 using namespace std;
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
+
+
+
 
 
 //if ALT+ENTER or resize or drag window we might want do
@@ -51,10 +53,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 				   PSTR cmdLine, int showCmd)
 {
 
-	//int w(512), h(256);
+	int w(512), h(256);
 	//int defaults[] = { 640,480, 800,600, 1024,768, 1280,1024 };
 		//WinUtil::ChooseRes(w, h, defaults, 4);
-	if (!WinUtil::Get().InitMainWindow(SCREEN_WIDTH, SCREEN_HEIGHT, hInstance, GAME_TITLE, MainWndProc, true))
+	if (!WinUtil::Get().InitMainWindow(w, h, hInstance, "Fezzy", MainWndProc, true))
 		assert(false);
 
 	MyD3D d3d;
