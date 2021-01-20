@@ -24,7 +24,8 @@ const RECTF thrustAnim[]{
 };
 
 Game::Game(MyD3D& d3d)
-	: mPMode(d3d)/*, mIntro(d3d)/*, mMenu(d3d), mGameOver(d3d)*/, mD3D(d3d), mpSB(nullptr)
+	: mPMode(d3d), mD3D(d3d), mpSB(nullptr)
+	//: mIntro(d3d), mMenu(d3d), mPMode(d3d), mGameOver(d3d), mD3D(d3d), mpSB(nullptr)
 {
 	sMKIn.Initialise(WinUtil::Get().GetMainWnd(), true, false);
 	sGamepads.Initialise();
@@ -44,15 +45,15 @@ void Game::Update(float dTime)
 {
 	sGamepads.Update();
 	switch (state)
-	{/*
-	case State::INTRO:
-		mIntro.Update(dTime);
-	case State::M_MENU:
-		mMenu.Update(dTime);*/
+	{
+	//case State::INTRO:
+	//	mIntro.Update(dTime);
+	//case State::M_MENU:
+	//	mMenu.Update(dTime);
 	case State::PLAY:
-		mPMode.Update(dTime);/*
-	case State::G_OVER:
-		mGameOver.Update(dTime);*/
+		mPMode.Update(dTime);
+	//case State::G_OVER:
+	//	mGameOver.Update(dTime);
 	}
 }
 
@@ -66,19 +67,19 @@ void Game::Render(float dTime)
 	mpSB->Begin(SpriteSortMode_Deferred, dxstate.NonPremultiplied(), &mD3D.GetWrapSampler());
 
 	switch (state)
-	{/*
-	case State::INTRO:
-		mIntro.Render(dTime, *mpSB);
-		break;
-	case State::M_MENU:
-		mMenu.Render(dTime, *mpSB);
-		break;*/
+	{
+	//case State::INTRO:
+	//	mIntro.Render(dTime, *mpSB);
+	//	break;
+	//case State::M_MENU:
+	//	mMenu.Render(dTime, *mpSB);
+	//	break;
 	case State::PLAY:
 		mPMode.Render(dTime, *mpSB);
-		break;/*
-	case State::G_OVER:
-		mGameOver.Render(dTime, *mpSB);
-		break;*/
+		break;
+	//case State::G_OVER:
+	//	mGameOver.Render(dTime, *mpSB);
+	//	break;
 	}
 
 	mpSB->End();
@@ -280,9 +281,3 @@ void PlayMode::InitPlayer()
 
 	mMissile.Init(mD3D);
 }
-/*
-IntroMode::IntroMode(MyD3D& d3d)
-	:mD3D(d3d), mBgndMnt(d3d)
-{
-	InitBgnd();
-}*/

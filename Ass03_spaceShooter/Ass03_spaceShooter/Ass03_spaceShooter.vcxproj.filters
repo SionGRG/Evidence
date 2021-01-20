@@ -39,7 +39,7 @@
     <ClCompile Include="Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameModes.cpp">
+    <ClCompile Include="ModeMgr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -68,7 +68,7 @@
     <ClInclude Include="Definitions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameModes.h">
+    <ClInclude Include="ModeMgr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

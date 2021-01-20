@@ -6,7 +6,8 @@
 #include "D3D.h"
 #include "SpriteBatch.h"
 #include "Sprite.h"
-//#include "GameModes.h"
+#include "ModeMgr.h"
+#include <iostream>
 
 /*
 Animated missile bullet 
@@ -93,6 +94,7 @@ struct Bullet
 class PlayMode
 {
 public:
+	PlayMode();
 	PlayMode(MyD3D& d3d);
 	void Update(float dTime);
 	void Render(float dTime, DirectX::SpriteBatch& batch);
@@ -135,21 +137,21 @@ Basic wrapper for a game
 class Game
 {
 public:
+
 	enum class State { INTRO, M_MENU, PLAY, G_OVER };
 	static MouseAndKeys sMKIn;
 	static Gamepads sGamepads;
 	//State state = State::INTRO;
 	State state = State::PLAY;
 	Game(MyD3D& d3d);
-
-
+	
 	void Release();
 	void Update(float dTime);
 	void Render(float dTime);
 private:
 	MyD3D& mD3D;
 	DirectX::SpriteBatch *mpSB = nullptr;
-	// Game Modes
+	/* Game Modes */
 	//IntroMode mIntro;
 	//MainMenuMode mMenu;
 	PlayMode mPMode;

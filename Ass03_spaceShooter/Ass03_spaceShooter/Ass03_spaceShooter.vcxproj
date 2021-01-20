@@ -99,7 +99,7 @@
     <ClCompile Include="D3D.cpp" />
     <ClCompile Include="D3DUtil.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="GameModes.cpp" />
+    <ClCompile Include="ModeMgr.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Sprite.cpp" />
@@ -111,7 +111,7 @@
     <ClInclude Include="D3DUtil.h" />
     <ClInclude Include="Definitions.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="GameModes.h" />
+    <ClInclude Include="ModeMgr.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="TexCache.h" />
