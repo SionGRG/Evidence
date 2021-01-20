@@ -21,10 +21,10 @@ namespace GC {
 	const float MISSILE_SPEED = 300;
 	const float SCROLL_SPEED = 10.f;
 	const int BGND_LAYERS = 8;
-	const float MAX_ASTEROIDS = 10;
+	const float GRAVITY = 9.8f;
+	const int MAX_ASTEROIDS = 10;
 	const float ASTEROID_SPEED = 200;
-	const float GRAVITY = 9.8f * 10;
-	const float SPAWN_DELAY = 0.25f;
+	const float ASTEROID_SPAWN_DELAY = 0.5f;
 };
 
 class IntroMode : public AMode

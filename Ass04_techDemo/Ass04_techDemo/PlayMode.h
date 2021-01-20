@@ -9,7 +9,7 @@
 #include "ModeMgr.h"
 #include "GameObj.h"
 #include "Definitions.h"
-
+#include "Game.h"
 
 
 class PlayMode;
@@ -31,21 +31,12 @@ class Asteroid : public GameObj
 public:
 	Asteroid(MyD3D& d3d);
 	void Update(float dTime) override;
-	float mSpawnPosX = SCREEN_WIDTH * .75;			// Spawning positions
-	int mSpawn = 16;								// Number of Spawns on Screen
-	int mSpawns = 0;								// Number of Spawns on Screen
-	float mSpawnTimer = 16.f;						// time limit on Spawning
-	int mMaxSpawns = 20;						// time limit on Spawning
+	int mMaxSpawns = 20;							// time limit on Spawning
+	int mAsteroidSpeed = GC::ASTEROID_SPEED;		// Asteroid Speed
+	int mAsteroidGravityPull = GC::GRAVITY * 10;	// Asteroid Speed
 
-	// the asteroid needs a link to the mode it belongs to
-	void SetMode(PlayMode& pm) {
-		maMyMode = &pm;
-	}
 private:
 	Sprite mExplosion;								// Explode when destroyed
-	PlayMode* maMyMode = nullptr;					// my mode owner
-public:
-	void Init(int mSpawn);
 };
 
 class Explosion : public GameObj
@@ -73,13 +64,14 @@ public:
 	}
 
 private:
-	Sprite mThrust;		//flames out the back
+	Sprite mThrust;								//flames out the back
 	//once we start thrusting we have to keep doing it for 
 	//at least a fraction of a second or it looks whack
 	float mThrusting = 0;
-	RECTF mPlayArea;				//where can I move?
-	PlayMode *mpMyMode = nullptr;	//my mode owner
-	float mFireTimer = 0;			//time limit on firing
+	RECTF mPlayArea;							//where can I move?
+	PlayMode *mpMyMode = nullptr;				//my mode owner
+	float mFireTimer = 0;						//time limit on firing
+	float mAsteroidTimer = 0;						// time limit on Spawning
 
 	void Init();
 };

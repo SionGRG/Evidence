@@ -1,5 +1,4 @@
 #include "PlayMode.h"
-#include "Game.h"
 #include "WindowUtils.h"
 
 using namespace std;
@@ -62,12 +61,6 @@ Asteroid::Asteroid(MyD3D& d3d)
 	: GameObj(d3d),
 	mExplosion(d3d)
 {
-	Init(mSpawns);
-}
-
-void Asteroid::Init (int mSpawn)
-{
-	MyD3D& d3d = Game::Get().GetD3D();
 	ID3D11ShaderResourceView* a = d3d.GetCache().LoadTexture(&d3d.GetDevice(), ASTEROID_TEXTURE);
 
 	mSpr.SetTex(*a, asteroids[0]);
@@ -76,17 +69,16 @@ void Asteroid::Init (int mSpawn)
 	mSpr.origin = Vector2((asteroids[0].right - asteroids[0].left) / 2.f, (asteroids[0].bottom - asteroids[0].top) / 2.f);
 	mSpr.rotation = PI / 2.f;
 
-	mSpr.mPos = Vector2(mSpawnPosX, SCREEN_HEIGHT * .025f);			// Spawning positions
-	mActive = true;
-
+	mSpr.mPos = Vector2(SCREEN_WIDTH * .75, SCREEN_HEIGHT * .025f);			// Spawning positions
+	mActive = false;
 }
 
 void Asteroid::Update(float dTime)
 {
 	if (mActive)
 	{
-		mSpr.mPos.x -= GC::ASTEROID_SPEED * dTime;
-		mSpr.mPos.y += GC::GRAVITY * dTime;
+		mSpr.mPos.x -= mAsteroidSpeed * dTime;
+		mSpr.mPos.y += mAsteroidGravityPull * dTime;
 		if (mSpr.mPos.x < 0 || mSpr.mPos.x > WinUtil::Get().GetClientWidth() 
 			|| mSpr.mPos.y > WinUtil::Get().GetClientHeight())
 			mActive = false;
@@ -97,14 +89,29 @@ void Asteroid::Update(float dTime)
 
 
 
-
-
-
 //****************************************************************
 
 void Player::Update(float dTime)
 {
 	Game& gm = Game::Get();
+
+	//if ((gm.mMKIn.IsPressed(VK_E) || gm.mMKIn.GetMouseButton(MouseAndKeys::ButtonT::RBUTTON) ||
+	//	(gm.mGamepads.IsConnected(0) && gm.mGamepads.IsPressed(0, XINPUT_GAMEPAD_Y))) &&
+	if(GetClock() > mAsteroidTimer)
+	{
+		GameObj* pAstrd = mpMyMode->FindFirst(typeid(Asteroid), false);
+		if (pAstrd)
+		{
+			pAstrd->mActive = true;
+			srand((unsigned)time(0));
+			float randPos = pAstrd->mSpr.GetScale().x * (rand() % 7);
+			pAstrd->mSpr.mPos = Vector2(SCREEN_WIDTH * .75 * randPos, SCREEN_WIDTH * .025 * randPos);
+			if (pAstrd->mSpr.mPos.x < SCREEN_WIDTH * .5)
+				pAstrd->mSpr.mPos.x += SCREEN_WIDTH * .45;
+			mAsteroidTimer = GetClock() + GC::ASTEROID_SPAWN_DELAY;
+		}
+	}
+
 	if ( (gm.mMKIn.IsPressed(VK_SPACE) || gm.mMKIn.GetMouseButton(MouseAndKeys::ButtonT::LBUTTON) ||
 		(gm.mGamepads.IsConnected(0) && gm.mGamepads.IsPressed(0, XINPUT_GAMEPAD_A))) &&
 		GetClock() > mFireTimer)
@@ -224,17 +231,25 @@ PlayMode::PlayMode()
 	InitBgnd();
 	mObjects.reserve(1000);
 
-	Player *p = new Player();
+	Player* p = new Player();
 	p->SetMode(*this);
 	p->mActive = true;
 	Add(p);
 	for (int i = 0; i < 10; ++i)
-		Add(new Bullet(Game::Get().GetD3D()));	
+		Add(new Bullet(Game::Get().GetD3D()));
+	for (int i = 0; i < GC::MAX_ASTEROIDS; i++)
+	{
+		Asteroid* Astrd = new Asteroid(Game::Get().GetD3D());
+		//srand((unsigned)time(0));
+		//float randPos = Astrd->mSpr.GetScale().x * (rand() % 6);
+		//Astrd->mSpr.mPos = Vector2(SCREEN_WIDTH * .75 * randPos, SCREEN_WIDTH * .025 * randPos);
+		Add(Astrd);
+	}
 }
 
 PlayMode::~PlayMode()
 {
-	for (size_t i = 0; i <= mObjects.size(); ++i)
+	for (size_t i = 0; i < mObjects.size(); ++i)
 		delete mObjects[i];
 	mObjects.clear();
 }
@@ -247,23 +262,6 @@ void PlayMode::UpdateBgnd(float dTime)
 		s.Scroll(dTime*(i++)*GC::SCROLL_SPEED, 0);
 }
 
-void PlayMode::UpdateAstrd(float dTime)
-{
-	// astroids
-	Asteroid* astrd = new Asteroid(Game::Get().GetD3D());
-	astrd->SetMode(*this);
-	for (int i = 1; i < astrd->mSpawn; i++)
-	{
-		srand((unsigned)time(0));
-		float randPos = i * (astrd->mSpr.GetScale().x * (rand() % 2));
-		astrd->mSpr.mPos.x = astrd->mSpawnPosX * astrd->mSpawnTimer * randPos * dTime;
-	}
-	while (astrd->mSpawns <= astrd->mMaxSpawns)
-	{
-		Add(astrd);
-		astrd->mSpawns++;
-	}
-}
 void PlayMode::Update(float dTime)
 {
 	UpdateBgnd(dTime);
@@ -271,8 +269,6 @@ void PlayMode::Update(float dTime)
 	for (size_t i = 0; i < mObjects.size(); ++i)
 		if (mObjects[i]->mActive)
 			mObjects[i]->Update(dTime);
-
-	UpdateAstrd(dTime);
 }
 
 void PlayMode::Render(float dTime, DirectX::SpriteBatch & batch) {
