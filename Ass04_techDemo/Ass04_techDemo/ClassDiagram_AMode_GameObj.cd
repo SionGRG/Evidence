@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="GameObj">
+    <Position X="1.5" Y="0.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAIAAAAAAAQAAAAAEAAAAAAAAAAABEAAAAAAAA=</HashCode>
+      <FileName>GameObj.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Game">
+    <Position X="18.25" Y="3.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAACAAAACAiGgAAIgBAAABAAAAA=</HashCode>
+      <FileName>Game.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="mMMgr" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="GameOverMode">
+    <Position X="11" Y="4.75" Width="3.25" />
+    <InheritanceLine Type="AMode" FixedToPoint="true">
+      <Path>
+        <Point X="11.125" Y="2.757" />
+        <Point X="11.125" Y="4.375" />
+        <Point X="12.625" Y="4.375" />
+        <Point X="12.625" Y="4.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAQAAgAAAAAAAAAABAAAAAAAAAAAAAAAkBEAAAAAAAA=</HashCode>
+      <FileName>Game.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IntroMode">
+    <Position X="14.5" Y="4.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAQAAgAAAAAAAAAAAAAAAAAAAAAAAAAAkBECAAAAAAA=</HashCode>
+      <FileName>Game.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ModeMgr">
+    <Position X="14.5" Y="0.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAIAAAAAAAAAEAAAAAAAAAgNAIABAAAIA=</HashCode>
+      <FileName>ModeMgr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PlayMode">
+    <Position X="6.75" Y="3.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAYAQgAIAAAAAAgAAAAABAAAAAAAAAAgkBAAAAgApgA=</HashCode>
+      <FileName>PlayMode.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Singleton&lt;T&gt;">
+    <Position X="18.5" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAACAAAAAAAAAAAEAAAAgAAAQAAA=</HashCode>
+      <FileName>Singleton.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Bullet">
+    <Position X="0.5" Y="4.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAg=</HashCode>
+      <FileName>PlayMode.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Player">
+    <Position X="3" Y="4.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>BAQAAAAQAAAACoAAAAAAAAAAAAUAAQABABQCAQAAAAA=</HashCode>
+      <FileName>PlayMode.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AMode">
+    <Position X="9.5" Y="0.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAQAAgAAAAAAAAAAAAAAAAAAAAAEEAAAoBAAAAAAAAA=</HashCode>
+      <FileName>ModeMgr.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
