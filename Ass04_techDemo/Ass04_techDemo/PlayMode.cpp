@@ -85,32 +85,11 @@ void Asteroid::Update(float dTime)
 	}
 }
 // Explosion
-
+//...To be implemented
 
 
 
 //****************************************************************
-
-bool Player::IsColliding(GameObj* obj1, GameObj* obj2)
-{
-	/* Collision Detectiion */
-		// Right
-	if (((obj1->mSpr.mPos.x + obj1->mSpr.origin.x) < (obj2->mSpr.mPos.x - obj2->mSpr.origin.x)) &&
-		(((obj1->mSpr.mPos.y - obj1->mSpr.origin.y) < obj2->mSpr.mPos.y) &&
-			((obj1->mSpr.mPos.y + obj1->mSpr.origin.y) > obj2->mSpr.mPos.y)))
-	{
-		return true;
-	}
-	// left
-	else if (((obj1->mSpr.mPos.x - obj1->mSpr.origin.x) > (obj2->mSpr.mPos.x + obj2->mSpr.origin.x)) &&
-		(((obj1->mSpr.mPos.y - obj1->mSpr.origin.y) < obj2->mSpr.mPos.y) &&
-			((obj1->mSpr.mPos.y + obj1->mSpr.origin.y) > obj2->mSpr.mPos.y)))
-	{
-		return true;
-	}
-	else
-		return false;
-}
 
 void Player::Update(float dTime)
 {
@@ -132,7 +111,7 @@ void Player::Update(float dTime)
 		}
 	}
 
-	if (playerHealth == 0)
+	if (playerHealth <= 0)
 	{
 		Game::Get().GetModeMgr().SwitchMode(GameOverMode::MODE_NAME);
 	}
@@ -149,27 +128,6 @@ void Player::Update(float dTime)
 		}
 	}
 
-	// Destroy asteroids upon impact from missiles
-	//if(!(pAstrd->mSpr.origin.x == pM->mSpr.origin.x))
-	//if ((gm.mMKIn.IsPressed(VK_A) || gm.mMKIn.GetMouseButton(MouseAndKeys::ButtonT::RBUTTON) ||
-	//	(gm.mGamepads.IsConnected(0) && gm.mGamepads.IsPressed(0, XINPUT_GAMEPAD_Y))))
-	//{
-	//	pAstrd->mActive = false;
-	//	pM->mActive = false;
-	//
-	//	//mpMyMode->Remove(pAstrd);
-	//	//mpMyMode->Remove(pM);
-	//}
-
-	//if (p->IsColliding(p, Astrd))
-	if ((gm.mMKIn.IsPressed(VK_A) || gm.mMKIn.GetMouseButton(MouseAndKeys::ButtonT::RBUTTON) ||
-		(gm.mGamepads.IsConnected(0) && gm.mGamepads.IsPressed(0, XINPUT_GAMEPAD_Y))))
-	{
-		//pAstrd->mActive = false;
-		//mpMyMode->Remove(pAstrd);
-		pAstrd->~GameObj();
-		playerHealth--;
-	}
 	if (mThrusting)
 	{
 		mThrust.mPos = mSpr.mPos;
@@ -276,31 +234,14 @@ PlayMode::PlayMode()
 {
 	InitBgnd();
 	mObjects.reserve(1000);
-
-	Player* p = new Player();
-	p->SetMode(*this);
-	p->mActive = true;
-	Add(p);
 	
-	for (int i = 0; i < 10; ++i)
-	{
-		Bullet* bullet = new Bullet(Game::Get().GetD3D());
-		Add(bullet);
-		for (int i = 0; i < GC::MAX_ASTEROIDS; i++)
-		{
-			Asteroid* Astrd = new Asteroid(Game::Get().GetD3D());
-			Add(Astrd);			
-			//Game& gm = Game::Get();
-			//if (p->IsColliding(p, Astrd))
-			//if ((gm.mMKIn.IsPressed(VK_A) || gm.mMKIn.GetMouseButton(MouseAndKeys::ButtonT::RBUTTON) ||
-			//		(gm.mGamepads.IsConnected(0) && gm.mGamepads.IsPressed(0, XINPUT_GAMEPAD_Y))))
-			//{
-			//	Astrd->mActive = false;
-			//	Remove(Astrd);
-			//	p->playerHealth--;
-			//}
-		}	
-	}	
+	player->SetMode(*this);
+	player->mActive = true;
+	Add(player);
+	
+	Add(bullet);
+	Add(asteroid);
+		
 }
 
 PlayMode::~PlayMode()
@@ -318,19 +259,35 @@ void PlayMode::UpdateBgnd(float dTime)
 		s.Scroll(dTime*(i++)*GC::SCROLL_SPEED, 0);
 }
 
-//bool PlayMode::Collision(GameObj* obj1, GameObj* obj2)
-//{ }
-
 void PlayMode::Update(float dTime)
 {
 	UpdateBgnd(dTime);
 
 	for (size_t i = 0; i < mObjects.size(); ++i)
 		if (mObjects[i]->mActive)
-			mObjects[i]->Update(dTime);
-	
-	//Collision(GameObj * obj1, GameObj * obj2);
+			mObjects[i]->Update(dTime);	
+
+	// Collisions
+	if ((player->mActive && asteroid->mActive && (player->mSpr.mPos.x > asteroid->mSpr.mPos.x) &&
+		((player->mSpr.mPos.y > asteroid->mSpr.mPos.y - asteroid->mSpr.origin.y) &&
+		(player->mSpr.mPos.y < asteroid->mSpr.mPos.y + asteroid->mSpr.origin.y))))
+	{
+		asteroid->mActive = false;
+		//player->playerHealth--;
+		Game::Get().GetModeMgr().SwitchMode(GameOverMode::MODE_NAME);
+	}
+
+	if ((bullet->mActive && asteroid->mActive && (bullet->mSpr.mPos.x > asteroid->mSpr.mPos.x) &&
+		((bullet->mSpr.mPos.y > asteroid->mSpr.mPos.y - asteroid->mSpr.origin.y) &&
+		 (bullet->mSpr.mPos.y < asteroid->mSpr.mPos.y + asteroid->mSpr.origin.y))))
+	{
+		player->playerScore += 10;
+		bullet->mActive = false;
+		asteroid->mActive = false;
+		RecordScore = player->playerScore;
+	}
 }
+
 
 void PlayMode::Render(float dTime, DirectX::SpriteBatch & batch) {
 	for (auto& s : mBgnd)

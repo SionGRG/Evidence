@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <iostream>
 
 #include "D3D.h"
 #include "SpriteBatch.h"
@@ -58,11 +59,11 @@ public:
 	Player();
 	void Render(float dTime, DirectX::SpriteBatch& batch) override;
 	void Update(float dTime) override;
-	bool IsColliding(GameObj* obj1, GameObj* obj2);
 	//the player needs a link to the mode it belongs to
 	void SetMode(PlayMode& pm) {
 		mpMyMode = &pm;
 	}
+	int playerScore = 0;
 	float playerHealth = GC::PLAYERHEALTH;
 private:
 	Sprite mThrust;								//flames out the back
@@ -104,17 +105,21 @@ public:
 	*/
 	GameObj* FindFirst(const std::type_info& type, bool active);
 
+	int RecordScore = 0;
+
 private:
 
 	std::vector<Sprite> mBgnd;						// parallax layers
 	std::vector<GameObj*> mObjects;					// objects needing update/render
+
+	// Game objects
+	Player* player = new Player();
+	Bullet* bullet = new Bullet(Game::Get().GetD3D());
+	Asteroid* asteroid = new Asteroid(Game::Get().GetD3D());
 
 	//setup once
 	void InitBgnd();
 
 	//make it scroll parallax
 	void UpdateBgnd(float dTime);
-
-	// update asteroids
-	//bool Collision(GameObj* obj1, GameObj* obj2);
 };

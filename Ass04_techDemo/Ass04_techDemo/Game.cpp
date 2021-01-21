@@ -90,7 +90,7 @@ IntroMode::IntroMode()
 {
 	mSpr.SetTex(*Game::Get().GetD3D().GetCache().LoadTexture(&Game::Get().GetD3D().GetDevice(), "start1.dds", "start1"));
 	mSpr.SetScale(Vector2(WinUtil::Get().GetClientWidth() / mSpr.GetTexData().dim.x, WinUtil::Get().GetClientHeight() / mSpr.GetTexData().dim.y));
-
+	
 	MenuMgr::Handler h1{ [this](MenuNode& node, MenuNode::Event etype) {HandleUIEvent(node, etype); } };
 	MenuMgr& mgr = Game::Get().GetMenuMgr();
 	mgr.AddEventHandler("Intro", "quit button", MenuNode::Event::CLICK, h1);
@@ -162,7 +162,7 @@ GameOverMode::GameOverMode()
 }
 void GameOverMode::Update(float dTime)
 {
-
+	pointsScored = PlayMode().RecordScore;
 }
 
 void GameOverMode::Render(float dTime, DirectX::SpriteBatch& batch)
