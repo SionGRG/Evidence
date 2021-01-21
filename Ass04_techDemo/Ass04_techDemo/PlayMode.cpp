@@ -5,24 +5,24 @@ using namespace std;
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
-const RECTF missileSpin[]{
-	{ 0,  0, 53, 48},
-	{ 54, 0, 107, 48 },
-	{ 108, 0, 161, 48 },
-	{ 162, 0, 220, 48 },
+const TexCache::TexData::Sprite missileSpin[]{
+	{{0,0}, false, { 0,  0, 53, 48} },
+	{{0,0}, false, { 54, 0, 107, 48} },
+	{{0,0}, false, { 108, 0, 161, 48}},
+	{{0,0}, false, { 162, 0, 220, 48} },
 };
 
-const RECTF thrustAnim[]{
-	{ 0,  0, 15, 16},
-	{ 16, 0, 31, 16 },
-	{ 32, 0, 47, 16 },
-	{ 48, 0, 64, 16 },
+const TexCache::TexData::Sprite thrustAnim[]{
+	{{0,0}, false, { 0,  0, 15, 16} },
+	{{0,0}, false, { 16, 0, 31, 16} },
+	{{0,0}, false, { 32, 0, 47, 16} },
+	{{0,0}, false, { 48, 0, 64, 16} },
 };
 
 Bullet::Bullet(MyD3D & d3d)
 	:GameObj(d3d)
 {
-	vector<RECTF> frames2(missileSpin, missileSpin + sizeof(missileSpin) / sizeof(missileSpin[0]));
+	vector<TexCache::TexData::Sprite> frames2(missileSpin, missileSpin + sizeof(missileSpin) / sizeof(missileSpin[0]));
 	ID3D11ShaderResourceView* p = d3d.GetCache().LoadTexture(&d3d.GetDevice(), MISSILE_TEXTURE, "missile", true, &frames2);
 
 	mSpr.SetTex(*p);
@@ -30,7 +30,7 @@ Bullet::Bullet(MyD3D & d3d)
 	mSpr.GetAnim().Play(true);
 	mSpr.SetScale(Vector2((SCREEN_WIDTH / mSpr.GetTexData().dim.x) * 0.1f, 
 		(SCREEN_HEIGHT / mSpr.GetTexData().dim.y) * 0.035f));
-	mSpr.origin = Vector2((missileSpin[0].right - missileSpin[0].left) / 2.f, (missileSpin[0].bottom - missileSpin[0].top) / 2.f);
+	mSpr.origin = Vector2((missileSpin[0].dim.right - missileSpin[0].dim.left) / 2.f, (missileSpin[0].dim.bottom - missileSpin[0].dim.top) / 2.f);
 	mActive = false;
 }
 
@@ -46,15 +46,15 @@ void Bullet::Update(float dTime)
 }
 
 // Asteroids
-const RECTF asteroids[]{
-	{ 0, 0, 128 , 128 },
-	{ 128, 0, 128 , 128 },
-	{ 256, 0, 128 , 128 },
-	{ 384, 0, 128 , 128 },
-	{ 512, 0, 128 , 128 },
-	{ 640, 0, 128 , 128 },
-	{ 768, 0, 128 , 128 },
-	{ 896, 0, 128 , 128 },
+const TexCache::TexData::Sprite asteroids[]{
+	{{0,0}, false, { 0, 0, 128 , 128 } },
+	{{0,0}, false, { 128, 0, 128 , 128 }},
+	{{0,0}, false, { 256, 0, 128 , 128 }},
+	{{0,0}, false, { 384, 0, 128 , 128 }},
+	{{0,0}, false, { 512, 0, 128 , 128 }},
+	{{0,0}, false, { 640, 0, 128 , 128 }},
+	{{0,0}, false, { 768, 0, 128 , 128 }},
+	{{0,0}, false, { 896, 0, 128 , 128 }},
 };
 
 Asteroid::Asteroid(MyD3D& d3d)
@@ -63,10 +63,10 @@ Asteroid::Asteroid(MyD3D& d3d)
 {
 	ID3D11ShaderResourceView* a = d3d.GetCache().LoadTexture(&d3d.GetDevice(), ASTEROID_TEXTURE);
 
-	mSpr.SetTex(*a, asteroids[0]);
+	mSpr.SetTex(*a, asteroids[0].dim);
 	mSpr.SetScale(Vector2((SCREEN_WIDTH / mSpr.GetTexData().dim.x) * 0.35f,
 		(SCREEN_WIDTH / mSpr.GetTexData().dim.y) * 0.35f));
-	mSpr.origin = Vector2((asteroids[0].right - asteroids[0].left) / 2.f, (asteroids[0].bottom - asteroids[0].top) / 2.f);
+	mSpr.origin = Vector2((asteroids[0].dim.right - asteroids[0].dim.left) / 2.f, (asteroids[0].dim.bottom - asteroids[0].dim.top) / 2.f);
 	mSpr.rotation = PI / 2.f;
 
 	mSpr.mPos = Vector2(SCREEN_WIDTH * .75, SCREEN_HEIGHT * .025f);			// Spawning positions
@@ -91,15 +91,35 @@ void Asteroid::Update(float dTime)
 
 //****************************************************************
 
+bool Player::IsColliding(GameObj* obj1, GameObj* obj2)
+{
+	/* Collision Detectiion */
+		// Right
+	if (((obj1->mSpr.mPos.x + obj1->mSpr.origin.x) < (obj2->mSpr.mPos.x - obj2->mSpr.origin.x)) &&
+		(((obj1->mSpr.mPos.y - obj1->mSpr.origin.y) < obj2->mSpr.mPos.y) &&
+			((obj1->mSpr.mPos.y + obj1->mSpr.origin.y) > obj2->mSpr.mPos.y)))
+	{
+		return true;
+	}
+	// left
+	else if (((obj1->mSpr.mPos.x - obj1->mSpr.origin.x) > (obj2->mSpr.mPos.x + obj2->mSpr.origin.x)) &&
+		(((obj1->mSpr.mPos.y - obj1->mSpr.origin.y) < obj2->mSpr.mPos.y) &&
+			((obj1->mSpr.mPos.y + obj1->mSpr.origin.y) > obj2->mSpr.mPos.y)))
+	{
+		return true;
+	}
+	else
+		return false;
+}
+
 void Player::Update(float dTime)
 {
 	Game& gm = Game::Get();
-
-	//if ((gm.mMKIn.IsPressed(VK_E) || gm.mMKIn.GetMouseButton(MouseAndKeys::ButtonT::RBUTTON) ||
-	//	(gm.mGamepads.IsConnected(0) && gm.mGamepads.IsPressed(0, XINPUT_GAMEPAD_Y))) &&
+	GameObj* pAstrd = mpMyMode->FindFirst(typeid(Asteroid), false);
+	GameObj* pM = mpMyMode->FindFirst(typeid(Bullet), false);
+	// Spawn astroids
 	if(GetClock() > mAsteroidTimer)
 	{
-		GameObj* pAstrd = mpMyMode->FindFirst(typeid(Asteroid), false);
 		if (pAstrd)
 		{
 			pAstrd->mActive = true;
@@ -112,11 +132,16 @@ void Player::Update(float dTime)
 		}
 	}
 
+	if (playerHealth == 0)
+	{
+		Game::Get().GetModeMgr().SwitchMode(GameOverMode::MODE_NAME);
+	}
+
+	// Shoot Missiles
 	if ( (gm.mMKIn.IsPressed(VK_SPACE) || gm.mMKIn.GetMouseButton(MouseAndKeys::ButtonT::LBUTTON) ||
 		(gm.mGamepads.IsConnected(0) && gm.mGamepads.IsPressed(0, XINPUT_GAMEPAD_A))) &&
 		GetClock() > mFireTimer)
 	{
-		GameObj* pM = mpMyMode->FindFirst(typeid(Bullet), false);
 		if (pM) {
 			pM->mActive = true;
 			pM->mSpr.mPos = Vector2(mSpr.mPos.x + mSpr.GetScreenSize().x / 2.f, mSpr.mPos.y);
@@ -124,6 +149,27 @@ void Player::Update(float dTime)
 		}
 	}
 
+	// Destroy asteroids upon impact from missiles
+	//if(!(pAstrd->mSpr.origin.x == pM->mSpr.origin.x))
+	//if ((gm.mMKIn.IsPressed(VK_A) || gm.mMKIn.GetMouseButton(MouseAndKeys::ButtonT::RBUTTON) ||
+	//	(gm.mGamepads.IsConnected(0) && gm.mGamepads.IsPressed(0, XINPUT_GAMEPAD_Y))))
+	//{
+	//	pAstrd->mActive = false;
+	//	pM->mActive = false;
+	//
+	//	//mpMyMode->Remove(pAstrd);
+	//	//mpMyMode->Remove(pM);
+	//}
+
+	//if (p->IsColliding(p, Astrd))
+	if ((gm.mMKIn.IsPressed(VK_A) || gm.mMKIn.GetMouseButton(MouseAndKeys::ButtonT::RBUTTON) ||
+		(gm.mGamepads.IsConnected(0) && gm.mGamepads.IsPressed(0, XINPUT_GAMEPAD_Y))))
+	{
+		//pAstrd->mActive = false;
+		//mpMyMode->Remove(pAstrd);
+		pAstrd->~GameObj();
+		playerHealth--;
+	}
 	if (mThrusting)
 	{
 		mThrust.mPos = mSpr.mPos;
@@ -207,7 +253,7 @@ void Player::Init()
 	mPlayArea.bottom = h * 0.75f;
 	mSpr.mPos = Vector2(mPlayArea.left + mSpr.GetScreenSize().x / 2.f, (mPlayArea.bottom - mPlayArea.top) / 2.f);
 
-	vector<RECTF> frames(thrustAnim, thrustAnim + sizeof(thrustAnim) / sizeof(thrustAnim[0]));
+	vector<TexCache::TexData::Sprite> frames(thrustAnim, thrustAnim + sizeof(thrustAnim) / sizeof(thrustAnim[0]));
 	p = d3d.GetCache().LoadTexture(&d3d.GetDevice(), THRUST_TEXTURE, "thrust", true, &frames);
 	mThrust.SetTex(*p);
 	mThrust.GetAnim().Init(0, 3, 15, true);
@@ -235,16 +281,26 @@ PlayMode::PlayMode()
 	p->SetMode(*this);
 	p->mActive = true;
 	Add(p);
+	
 	for (int i = 0; i < 10; ++i)
-		Add(new Bullet(Game::Get().GetD3D()));
-	for (int i = 0; i < GC::MAX_ASTEROIDS; i++)
 	{
-		Asteroid* Astrd = new Asteroid(Game::Get().GetD3D());
-		//srand((unsigned)time(0));
-		//float randPos = Astrd->mSpr.GetScale().x * (rand() % 6);
-		//Astrd->mSpr.mPos = Vector2(SCREEN_WIDTH * .75 * randPos, SCREEN_WIDTH * .025 * randPos);
-		Add(Astrd);
-	}
+		Bullet* bullet = new Bullet(Game::Get().GetD3D());
+		Add(bullet);
+		for (int i = 0; i < GC::MAX_ASTEROIDS; i++)
+		{
+			Asteroid* Astrd = new Asteroid(Game::Get().GetD3D());
+			Add(Astrd);			
+			//Game& gm = Game::Get();
+			//if (p->IsColliding(p, Astrd))
+			//if ((gm.mMKIn.IsPressed(VK_A) || gm.mMKIn.GetMouseButton(MouseAndKeys::ButtonT::RBUTTON) ||
+			//		(gm.mGamepads.IsConnected(0) && gm.mGamepads.IsPressed(0, XINPUT_GAMEPAD_Y))))
+			//{
+			//	Astrd->mActive = false;
+			//	Remove(Astrd);
+			//	p->playerHealth--;
+			//}
+		}	
+	}	
 }
 
 PlayMode::~PlayMode()
@@ -262,6 +318,9 @@ void PlayMode::UpdateBgnd(float dTime)
 		s.Scroll(dTime*(i++)*GC::SCROLL_SPEED, 0);
 }
 
+//bool PlayMode::Collision(GameObj* obj1, GameObj* obj2)
+//{ }
+
 void PlayMode::Update(float dTime)
 {
 	UpdateBgnd(dTime);
@@ -269,6 +328,8 @@ void PlayMode::Update(float dTime)
 	for (size_t i = 0; i < mObjects.size(); ++i)
 		if (mObjects[i]->mActive)
 			mObjects[i]->Update(dTime);
+	
+	//Collision(GameObj * obj1, GameObj * obj2);
 }
 
 void PlayMode::Render(float dTime, DirectX::SpriteBatch & batch) {

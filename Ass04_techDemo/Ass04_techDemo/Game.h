@@ -10,6 +10,8 @@
 #include "Sprite.h"
 #include "Singleton.h"
 #include "ModeMgr.h"
+#include "MenuMgr.h"
+#include "Definitions.h"
 
 namespace GC {
 	const int ESC = 27;
@@ -21,10 +23,11 @@ namespace GC {
 	const float MISSILE_SPEED = 300;
 	const float SCROLL_SPEED = 10.f;
 	const int BGND_LAYERS = 8;
-	const float GRAVITY = 9.8f;
+	const float GRAVITY = SCREEN_WIDTH * .0075f;
 	const int MAX_ASTEROIDS = 10;
-	const float ASTEROID_SPEED = 200;
+	const float ASTEROID_SPEED = SCREEN_WIDTH * .15;
 	const float ASTEROID_SPAWN_DELAY = 0.5f;
+	const float PLAYERHEALTH = 300.f;
 };
 
 class IntroMode : public AMode
@@ -38,8 +41,11 @@ public:
 		return "INTRO";
 	}
 	void ProcessKey(char key) override;
+	bool Exit() override;
+	void Enter() override;
 private:
 	Sprite mSpr;
+	void HandleUIEvent(MenuNode& node, MenuNode::Event etype);
 };
 
 class GameOverMode : public AMode
@@ -53,8 +59,11 @@ public:
 		return "GAMEOVER";
 	}
 	void ProcessKey(char key) override;
+	bool Exit() override;
+	void Enter() override;
 private:
 	Sprite mSpr;
+	void HandleUIEvent(MenuNode& node, MenuNode::Event etype);
 };
 
 /*
@@ -74,14 +83,18 @@ public:
 	void Update(float dTime);
 	void Render(float dTime);
 	void ProcessKey(char key) {
-		mMMgr.ProcessKey(key);
+		mModeMgr.ProcessKey(key);
 	}
+	//getters
 	MyD3D& GetD3D() { return mD3D; }
-	ModeMgr& GetModeMgr() { return mMMgr; }
+	ModeMgr& GetModeMgr() { return mModeMgr; }
+	MenuMgr& GetMenuMgr() { return mMenuMgr; }
 private:
-	MyD3D& mD3D;
-	DirectX::SpriteBatch *mpSB = nullptr;
-	ModeMgr mMMgr;
+	MyD3D& mD3D;	//main access point to D3D
+	DirectX::SpriteBatch* mpSB = nullptr;	//for sprite rendering
+	ModeMgr mModeMgr;	//different bits of the game: intro, game, gameOver
+	MenuMgr mMenuMgr;	//different menu screens
+
+	//create the different menuscreens and setup each tree of nodes
+	void ConfigureUI();
 };
-
-

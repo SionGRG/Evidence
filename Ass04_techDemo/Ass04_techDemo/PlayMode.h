@@ -58,11 +58,12 @@ public:
 	Player();
 	void Render(float dTime, DirectX::SpriteBatch& batch) override;
 	void Update(float dTime) override;
+	bool IsColliding(GameObj* obj1, GameObj* obj2);
 	//the player needs a link to the mode it belongs to
 	void SetMode(PlayMode& pm) {
 		mpMyMode = &pm;
 	}
-
+	float playerHealth = GC::PLAYERHEALTH;
 private:
 	Sprite mThrust;								//flames out the back
 	//once we start thrusting we have to keep doing it for 
@@ -71,7 +72,7 @@ private:
 	RECTF mPlayArea;							//where can I move?
 	PlayMode *mpMyMode = nullptr;				//my mode owner
 	float mFireTimer = 0;						//time limit on firing
-	float mAsteroidTimer = 0;						// time limit on Spawning
+	float mAsteroidTimer = 0;					// time limit on Spawning
 
 	void Init();
 };
@@ -115,5 +116,5 @@ private:
 	void UpdateBgnd(float dTime);
 
 	// update asteroids
-	void UpdateAstrd(float dTime);
+	//bool Collision(GameObj* obj1, GameObj* obj2);
 };

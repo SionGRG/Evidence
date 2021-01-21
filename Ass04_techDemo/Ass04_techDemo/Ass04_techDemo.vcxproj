@@ -101,10 +101,13 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MenuMgr.cpp" />
+    <ClCompile Include="MenuNodes.cpp" />
     <ClCompile Include="ModeMgr.cpp" />
     <ClCompile Include="PlayMode.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="TexCache.cpp" />
+    <ClCompile Include="UIConfig.cpp" />
     <ClCompile Include="WindowUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -114,11 +117,14 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObj.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="MenuMgr.h" />
+    <ClInclude Include="MenuNodes.h" />
     <ClInclude Include="ModeMgr.h" />
     <ClInclude Include="PlayMode.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="TexCache.h" />
+    <ClInclude Include="UIConfig.h" />
     <ClInclude Include="WindowUtils.h" />
   </ItemGroup>
   <ItemGroup>

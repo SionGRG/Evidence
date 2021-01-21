@@ -21,10 +21,14 @@ public:
 	{
 		return WinUtil::Get().RealDefaultMssgHandler(hwnd, msg, wParam, lParam);
 	}
-	bool InitMainWindow(int width, int height, HINSTANCE hInstance, const std::string& appName, WNDPROC mssgHandler, bool centred=true);
+	bool InitMainWindow(int width, int height, HINSTANCE hInstance, const std::string& appName, WNDPROC mssgHandler, bool centred = true);
 	void SetD3D(MyD3D& d3d) {
 		assert(mpMyD3D == nullptr);
 		mpMyD3D = &d3d;
+	}
+	MyD3D& GetD3D() {
+		assert(mpMyD3D != nullptr);
+		return *mpMyD3D;
 	}
 	//wrap your game in one function call if using basic functions
 	int Run(void(*pUpdate)(float), void(*pRender)(float));
@@ -60,8 +64,8 @@ private:
 		int clientHeight;
 	};
 	WinData mWinData;
-	MyD3D *mpMyD3D;
-	
+	MyD3D *mpMyD3D = nullptr;
+
 	LRESULT RealDefaultMssgHandler(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 };
 

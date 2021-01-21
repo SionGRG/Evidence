@@ -74,14 +74,14 @@ void Sprite::SetTex(ID3D11ShaderResourceView& tex, const RECTF& texRect)
 	mpTex = &tex;
 	mTexRect = texRect;
 	mpTexData = &mD3D.GetCache().Get(mpTex);
-	
+
 	if (mTexRect.left == mTexRect.right && mTexRect.top == mTexRect.bottom)
 	{
 		SetTexRect(RECTF{ 0,0,mpTexData->dim.x,mpTexData->dim.y });
 	}
 }
-void Sprite::SetTexRect(const RECTF& texRect) {
-	mTexRect = texRect;
+void Sprite::SetTexRect(const RECT& texRect) {
+	mTexRect = RECTF(texRect);
 }
 void Sprite::Scroll(float x, float y) {
 	mTexRect.left += x;
@@ -90,9 +90,9 @@ void Sprite::Scroll(float x, float y) {
 	mTexRect.bottom += y;
 }
 
-void Sprite::SetFrame(int id) 
+void Sprite::SetFrame(int id)
 {
-	const TexCache::Data& data = mD3D.GetCache().Get(mpTex);
-	SetTexRect(data.frames.at(id));
+	const TexCache::TexData& data = mD3D.GetCache().Get(mpTex);
+	SetTexRect(data.GetSprite(id).dim);
 }
 

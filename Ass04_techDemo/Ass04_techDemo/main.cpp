@@ -61,6 +61,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance,
 	if (!d3d.InitDirect3D(OnResize))
 		assert(false);
 	d3d.GetCache().SetAssetPath("data/");
+	WinUtil::Get().SetD3D(d3d);
 	new Game(d3d);
 
 	bool canUpdateRender;

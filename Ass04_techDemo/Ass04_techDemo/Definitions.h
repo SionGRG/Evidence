@@ -8,7 +8,7 @@
 #define GAME_TITLE								"Ass04_SpaceShootertechDemo"		
 
 /* Loading time */
-#define INTRO_SHOW_TIME 2.0				// Intro scene loading time
+#define INTRO_SHOW_TIME 2.0					// Intro scene loading time
 
 //#define GAME_TITLE_FILEPATH					"data/gameTitle.png"
 

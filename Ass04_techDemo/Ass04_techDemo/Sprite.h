@@ -43,11 +43,11 @@ Wrap up sprite rendering and movement
 class Sprite
 {
 private:
-	ID3D11ShaderResourceView *mpTex;
+	ID3D11ShaderResourceView* mpTex;
 	MyD3D& mD3D;
 	RECTF mTexRect;
 	DirectX::SimpleMath::Vector2 scale;
-	const TexCache::Data *mpTexData;
+	const TexCache::TexData* mpTexData;
 	Animate mAnim;
 
 public:
@@ -70,13 +70,13 @@ public:
 		(*this) = rhs;
 	}
 	Sprite& operator=(const Sprite& rhs);
-	
+
 	//sprite is drawn using batch parameter
 	void Draw(DirectX::SpriteBatch& batch);
 	//change texture, optional rectf can isolate part of the texture
 	void SetTex(ID3D11ShaderResourceView& tex, const RECTF& texRect = RECTF{ 0,0,0,0 });
 	//change which part later
-	void SetTexRect(const RECTF& texRect);
+	void SetTexRect(const RECT& texRect);
 	void Scroll(float x, float y);
 
 	void SetFrame(int id);
@@ -86,7 +86,7 @@ public:
 
 
 	//getters
-	const TexCache::Data& GetTexData() const {
+	const TexCache::TexData& GetTexData() const {
 		assert(mpTexData);
 		return *mpTexData;
 	}

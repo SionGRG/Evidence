@@ -9,13 +9,13 @@ using namespace DirectX::SimpleMath;
 
 void TexCache::Release()
 {
-	for (auto& pair : mCache) 
+	for (auto& pair : mCache)
 		ReleaseCOM(pair.second.pTex);
 	mCache.clear();
 }
 
-ID3D11ShaderResourceView* TexCache::LoadTexture(ID3D11Device*pDevice, const std::string& fileName, const std::string& texName, 
-										bool appendPath, const vector<RECTF> *frames)
+ID3D11ShaderResourceView* TexCache::LoadTexture(ID3D11Device* pDevice, const std::string& fileName, const std::string& texName,
+	bool appendPath, const vector<TexData::Sprite>* frames)
 {
 	string name = texName;;
 	if (name.empty())
@@ -30,7 +30,7 @@ ID3D11ShaderResourceView* TexCache::LoadTexture(ID3D11Device*pDevice, const std:
 		return (*it).second.pTex;
 
 	//prepare the path for loading
-	const string *pPath = &fileName;
+	const string* pPath = &fileName;
 	string path;
 	if (appendPath)
 	{
@@ -40,7 +40,7 @@ ID3D11ShaderResourceView* TexCache::LoadTexture(ID3D11Device*pDevice, const std:
 	std::wstring ws(pPath->begin(), pPath->end());
 	//load it
 	DDS_ALPHA_MODE alpha;
-	ID3D11ShaderResourceView *pT;
+	ID3D11ShaderResourceView* pT;
 	if (CreateDDSTextureFromFile(pDevice, ws.c_str(), nullptr, &pT, 0, &alpha) != S_OK)
 	{
 		DBOUT("Cannot load " << *pPath << "\n");
@@ -48,17 +48,17 @@ ID3D11ShaderResourceView* TexCache::LoadTexture(ID3D11Device*pDevice, const std:
 	}
 	//save it
 	assert(pT);
-	mCache.insert(MyMap::value_type(name,Data(fileName, pT, GetDimensions(pT), frames)));
+	mCache.insert(MyMap::value_type(name, TexData(fileName, pT, GetDimensions(pT), frames)));
 	return pT;
 }
 
 
 //slowly find a texture by handle
 
-const TexCache::Data & TexCache::Get(ID3D11ShaderResourceView * pTex) {
+const TexCache::TexData& TexCache::Get(ID3D11ShaderResourceView* pTex) {
 
 	MyMap::iterator it = mCache.begin();
-	Data *p = nullptr;
+	TexData* p = nullptr;
 	while (it != mCache.end() && !p)
 	{
 		if ((*it).second.pTex == pTex)
@@ -91,3 +91,36 @@ Vector2 TexCache::GetDimensions(ID3D11ShaderResourceView* pTex)
 }
 
 
+void TexCache::Render(SpriteBatch& spriteBatch, const string& textureName, const RECT& dest, int spriteID, const Vector4& tint, float angle, float depth)
+{
+	const TexData& data = Get(textureName);
+	const TexData::Sprite* sprite = &data.GetSprite(spriteID);
+
+	if (!sprite || !sprite->stretchedSides)
+	{
+		//no sprite, just render the whole texture or there is a sprite it's one image
+		spriteBatch.Draw(data.pTex, dest, (sprite) ? &sprite->dim : nullptr, tint, angle, Vector2(0, 0), SpriteEffects_None, depth);
+	}
+	else
+	{
+		//it's a stretched image
+		assert(angle == 0);
+		int widths[] = { sprite->dim.left, sprite->dim.left + (int)sprite->corner.x,
+			sprite->dim.right - (int)sprite->corner.x, (int)sprite->dim.right };
+		int heights[] = { sprite->dim.top, sprite->dim.top + (int)sprite->corner.y,
+			sprite->dim.bottom - (int)sprite->corner.y, sprite->dim.bottom };
+
+		int dwidths[] = { dest.left, dest.left + (int)sprite->corner.x,
+			dest.right - (int)sprite->corner.x, dest.right };
+		int dheights[] = { dest.top, dest.top + (int)sprite->corner.y,
+			dest.bottom - (int)sprite->corner.y, dest.bottom };
+
+		for (int x = 0; x < 3; ++x)
+			for (int y = 0; y < 3; ++y)
+			{
+				RECT src{ widths[x], heights[y],widths[x + 1], heights[y + 1] };
+				RECT dst{ dwidths[x], dheights[y],dwidths[x + 1], dheights[y + 1] };
+				spriteBatch.Draw(data.pTex, dst, &src, tint, 0, Vector2(0, 0), SpriteEffects_None, depth);
+			}
+	}
+}
