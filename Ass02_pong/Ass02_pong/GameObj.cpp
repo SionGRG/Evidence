@@ -4,17 +4,17 @@ namespace Ass02_pong
 {
 	//Ball	*****************************************************************
 
-	void Ball::Init(sf::Texture& tex, int batTexPosX, int batTexPosY, int batTexWidth, int batTexHeight, float batPosX, float batPosY)
+	void Ball::Init(sf::Texture& tex, int ballTexPosX, int ballTexPosY, int ballTexWidth, int ballTexHeight, float ballPosX, float ballPosY)
 	{
 		spr.setTexture(tex, true);
 		//Hint: spr.setTextureRect(sf::IntRect{ 105, 5, 40, 40 });
-		spr.setTextureRect(sf::IntRect{ batTexPosX, batTexPosY, batTexWidth, batTexHeight });
+		spr.setTextureRect(sf::IntRect{ ballTexPosX, ballTexPosY, ballTexWidth, ballTexHeight });
 		//Hint: spr.setOrigin(20, 20);
-		float batOrgX = batTexWidth / 2;			// set origin().x to the center of the texture
-		float batOrgY = batTexHeight / 2;			// set origin().y to the center of the texture
+		float batOrgX = ballTexWidth / 2;			// set origin().x to the center of the texture
+		float batOrgY = ballTexHeight / 2;			// set origin().y to the center of the texture
 		spr.setOrigin(batOrgX, batOrgY);
 		//Hint: spr.setPosition(window.getSize().x * 0.5f, window.getSize().y * 0.5f);
-		spr.setPosition(SCREEN_WIDTH * batPosX, SCREEN_HEIGHT * batPosY);
+		spr.setPosition(SCREEN_WIDTH * ballPosX, SCREEN_HEIGHT * ballPosY);
 
 		// Get random numbers for the ball movement
 		srand(time(NULL));

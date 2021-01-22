@@ -15,12 +15,11 @@ namespace Ass02_pong
 	{
 		/* Load textures */
 		_data->assets.LoadTexture("Main Menu Background", MAIN_MENU_BACKGROUND_FILEPATH);
-		_data->assets.LoadTexture("Game Title", GAME_TITLE_FILEPATH);
 		_data->assets.LoadTexture("Play Button", PLAY_BUTTON_FILEPATH);
 		
 		/* set textures to their respective variables */
 		_background.setTexture(this->_data->assets.GetTexture("Main Menu Background"));
-		_title.setTexture(this->_data->assets.GetTexture("Game Title"));
+		
 		_playButton.setTexture(this->_data->assets.GetTexture("Play Button"));
 		
 		/* Scale the textures to the screen size */
@@ -31,8 +30,6 @@ namespace Ass02_pong
 		/* Center the textures */
 		_background.setPosition((SCREEN_WIDTH/2) - (_background.getGlobalBounds().width/2), 
 			(SCREEN_HEIGHT / 2) - (_background.getGlobalBounds().height / 2));
-		_title.setPosition((SCREEN_WIDTH/2) - (_title.getGlobalBounds().width/2), 
-			_title.getGlobalBounds().height / 2);
 		_playButton.setPosition((SCREEN_WIDTH/2) - (_playButton.getGlobalBounds().width/2), 
 			(SCREEN_HEIGHT / 2) - (_playButton.getGlobalBounds().height / 2));
 	}
@@ -63,7 +60,6 @@ namespace Ass02_pong
 	{
 		_data->window.clear();
 		_data->window.draw(_background);
-		_data->window.draw(_title);
 		_data->window.draw(_playButton);
 		_data->window.display();
 	}

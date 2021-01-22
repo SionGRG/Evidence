@@ -15,8 +15,10 @@
 #define GAME_BACKGROUND_FILEPATH				"data/bgndGame.png"
 #define GAMEOVER_BACKGROUND_FILEPATH			"data/bgndGameOver.png"
 #define GAME_TITLE_FILEPATH						"data/gameTitle.png"
+#define GAMEOVER_TITLE_FILEPATH					"data/gameOverTitle.png"
 #define PLAY_BUTTON_FILEPATH					"data/playButton.png"
 #define MAIN_MENU_BUTTON_FILEPATH				"data/mainMenuButton.png"
+#define QUIT_BUTTON_FILEPATH					"data/quitButton.png"
 #define SPRITESHEET_PONG_FILEPATH				"data/pongSprites.png"
 
 /* Fonts */

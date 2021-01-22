@@ -6,10 +6,10 @@
 
 namespace Ass02_pong
 {
-	class GameOverState : public State
+	class MainMenuState : public State
 	{
 	public:
-		GameOverState(GameDataRef data);
+		MainMenuState(GameDataRef data);
 
 		void Init();
 		void HandleInput();
@@ -20,8 +20,6 @@ namespace Ass02_pong
 		GameDataRef _data;
 
 		sf::Sprite _background;
-		sf::Sprite _title;
-		sf::Sprite _mainMenuButton;
 		sf::Sprite _playButton;
 	};
 }

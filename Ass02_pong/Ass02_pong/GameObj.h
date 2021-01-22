@@ -23,7 +23,7 @@ namespace Ass02_pong
 		{
 			return (rand() % high) + low;
 		}
-		void Init(sf::Texture& tex, int batTexPosX, int batTexPosY, int batTexWidth, int batTexHeight, float batPosX, float batPosY) override;
+		void Init(sf::Texture& tex, int ballTexPosX, int ballTexPosY, int ballTexWidth, int ballTexHeight, float ballPosX, float ballPosY) override;
 		void Reset();
 		void ChangeXDirection();
 		float ChangeYDirection(float& cDirY);
@@ -50,18 +50,5 @@ namespace Ass02_pong
 		void Render(float dT) override;
 	};
 
-	class text
-	{
-	private:
-		GameDataRef _data;
-	public:
-		text() {}
-		text(GameDataRef data);
-		~text() {}
-		
-		void Init(sf::Text txt, sf::Font font);
-		void Update(float dT);
-		void Render(float dT);
-	};
 }
 
