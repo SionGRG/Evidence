@@ -138,7 +138,6 @@ void Player::Update(float dTime)
 		mThrust.GetAnim().Update(dTime);
 
 	}
-	Vector2 mouse{ gm.mMKIn.GetMousePos(false) };
 	bool keypressed = gm.mMKIn.IsPressed(VK_UP) || gm.mMKIn.IsPressed(VK_DOWN) ||
 		gm.mMKIn.IsPressed(VK_RIGHT) || gm.mMKIn.IsPressed(VK_LEFT);
 	bool sticked = false;
@@ -146,7 +145,7 @@ void Player::Update(float dTime)
 		(gm.mGamepads.GetState(0).leftStickX != 0 || gm.mGamepads.GetState(0).leftStickX != 0))
 		sticked = true;
 
-	if (keypressed || (mouse.Length() > VERY_SMALL) || sticked)
+	if (keypressed || sticked)
 	{
 		//move the ship around
 		Vector2 pos(0, 0);
@@ -158,8 +157,6 @@ void Player::Update(float dTime)
 			pos.x += GC::SPEED * dTime;
 		else if (gm.mMKIn.IsPressed(VK_LEFT))
 			pos.x -= GC::SPEED * dTime;
-
-		pos += mouse * GC::MOUSE_SPEED * dTime;
 
 		if (sticked)
 		{
