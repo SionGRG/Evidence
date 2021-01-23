@@ -4,7 +4,7 @@
 #define SCREEN_HEIGHT 768			// window height
 
 /* Game window title */
-#define GAME_TITLE "Ass02_Pong"		
+#define GAME_TITLE								"Ass02_Pong"		
 
 /* Loading time */
 #define INTRO_SHOW_TIME 2.0			// Intro scene loading time
