@@ -68,8 +68,6 @@ namespace Ass02_pong
 		*/
 		virtual void Init(sf::Texture& tex, int texPosX, int texPosY, int texWidth, int texHeight, float sprPosX, float sprPosY) = 0;
 		
-		virtual void Movement(float dT) = 0;
-
 		virtual void Update(float dT) = 0;
 		
 		virtual void Render(float dT) = 0 {}

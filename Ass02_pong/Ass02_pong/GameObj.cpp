@@ -33,12 +33,12 @@ namespace Ass02_pong
 	float Ball::ChangeYDirection(float& cDirY)
 	{
 		// Check for hitting walls
-		if (spr.getPosition().y < (SCREEN_HEIGHT * 0) + spr.getOrigin().y)
+		if (spr.getPosition().y < (SCREEN_HEIGHT * 0.065f) + spr.getOrigin().y)
 		{
 			cDirY = cDirY * -1;				// bounce the ball off the wall
 			return cDirY;
 		}
-		if ((spr.getPosition().y + spr.getOrigin().y) > SCREEN_HEIGHT)
+		if ((spr.getPosition().y + spr.getOrigin().y) > SCREEN_HEIGHT * .98f)
 		{
 			cDirY = cDirY * -1;				// bounce the ball off the wall
 			return cDirY;
@@ -94,7 +94,7 @@ namespace Ass02_pong
 		float SPEED = 350;
 		if (sf::Keyboard::isKeyPressed(moveUp))
 		{
-			if ((spr.getPosition().y + 13) <= spr.getOrigin().y)
+			if ((spr.getPosition().y + 13) <= (SCREEN_HEIGHT * 0.065f) + spr.getOrigin().y)
 				SPEED = 0;					// Stop the bat if it reaches to the top of the screen
 			else
 				SPEED = SPEED;
@@ -102,7 +102,7 @@ namespace Ass02_pong
 		}
 		else if (sf::Keyboard::isKeyPressed(moveDown))
 		{
-			if ((spr.getPosition().y - 13) >= (SCREEN_HEIGHT - spr.getOrigin().y))
+			if ((spr.getPosition().y - 13) >= (SCREEN_HEIGHT * 0.98f) - spr.getOrigin().y)
 				SPEED = 0;					// Stop the bat if it reaches to the bottom of the screen
 			else
 				SPEED = SPEED;
@@ -120,6 +120,31 @@ namespace Ass02_pong
 
 	}
 	void Bat::Render(float dT)
+	{
+		Obj2D::Render(dT);
+	}
+
+	// Wall **************************************************************
+	void Wall::Init(sf::Texture& tex, int wallTexPosX, int wallTexPosY, int wallTexWidth, int wallTexHeight, float wallPosX, float wallPosY)
+	{
+		spr.setTexture(tex, true);
+		//Hint: example: spr.setTextureRect(sf::IntRect{ 4, 5, 42, 140 });
+		spr.setTextureRect(sf::IntRect{ wallTexPosX, wallTexPosY, wallTexWidth, wallTexHeight });
+		//Hint: example: spr.setOrigin(21, 70);
+		float batOrgX = wallTexWidth / 2;					// set origin().x to the center of the texture
+		float batOrgY = wallTexHeight / 2;					// set origin().y to the center of the texture
+		spr.setOrigin(batOrgX, batOrgY);
+		//Hint: example: spr.setPosition(window.getSize().x * 0.05f, window.getSize().y * 0.5f);
+		spr.setPosition(SCREEN_WIDTH * wallPosX, SCREEN_HEIGHT * wallPosY);
+		int scaleX = SCREEN_WIDTH * spr.getScale().x * .05;
+		spr.setScale(scaleX,1);
+	}
+
+	void Wall::Update(float dT)
+	{
+	}
+
+	void Wall::Render(float dT)
 	{
 		Obj2D::Render(dT);
 	}

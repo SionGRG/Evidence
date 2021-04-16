@@ -7,8 +7,6 @@ namespace Ass02_pong
 {
 	class Ball :public Obj2D
 	{
-	private:
-		GameDataRef _data;
 	public:
 		Ball() {}
 		Ball(GameDataRef data);
@@ -27,15 +25,15 @@ namespace Ass02_pong
 		void Reset();
 		void ChangeXDirection();
 		float ChangeYDirection(float& cDirY);
-		void Movement(float dT) override;
+		void Movement(float dT);
 		void Update(float dT) override;
 		void Render(float dT) override;
+	private:
+		GameDataRef _data;
 	};
 
 	class Bat :public Obj2D
 	{
-	private:
-		GameDataRef _data;
 	public:
 		Bat() {}
 		Bat(GameDataRef data);
@@ -45,10 +43,24 @@ namespace Ass02_pong
 		sf::Keyboard::Key moveDown;
 
 		void Init(sf::Texture& tex, int batTexPosX, int batTexPosY, int batTexWidth, int batTexHeight, float batPosX, float batPosY);
-		void Movement(float dT) override;
+		void Movement(float dT);
 		void Update(float dT) override;
 		void Render(float dT) override;
+	private:
+		GameDataRef _data;
 	};
 
+	class Wall :public Obj2D
+	{
+	public:
+		Wall() {}
+		Wall(GameDataRef _data);
+		~Wall() {}
+		void Init(sf::Texture& tex, int wallTexPosX, int wallTexPosY, int wallTexWidth, int wallTexHeight, float wallPosX, float wallPosY);
+		void Update(float dT) override;
+		void Render(float dT) override;
+	private: 
+		GameDataRef _data;
+	};
 }
 

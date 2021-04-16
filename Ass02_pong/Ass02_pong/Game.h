@@ -33,6 +33,8 @@ namespace Ass02_pong
 		//Fonts
 		sf::Font _fontAirstream;
 		// Objects
+		Wall wallT;
+		Wall wallB;
 		Ball ball;
 		Bat bat1;
 		Bat bat2;

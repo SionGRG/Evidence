@@ -22,6 +22,10 @@ namespace Ass02_pong
 		_fontAirstream = this->_data->assets.GetFont("Airstream Font");
 
 		// Ball
+		wallT.Init(_pongSheet, 100, 60, 140, 42, 0.5f, 0.065f);
+		wallB.Init(_pongSheet, 100, 112, 140, 42, 0.5f, 0.995f);
+
+		// Ball
 		ball.Init(_pongSheet, 105, 5, 40, 40, 0.5f, 0.5f);
 
 		// Players
@@ -152,6 +156,8 @@ namespace Ass02_pong
 		// Controls
 		HandleInput();
 		// Updates
+		wallT.Update(dT);
+		wallB.Update(dT);
 		ball.Update(dT);
 		bat1.Update(dT);
 		bat2.Update(dT);
@@ -167,9 +173,8 @@ namespace Ass02_pong
 		_data->window.clear();
 		_data->window.draw(_background);
 		// Object Renders
-			//ball.Render(dT);
-			//bat1.Render(dT);
-			//bat2.Render(dT);
+		_data->window.draw(wallT.spr);
+		_data->window.draw(wallB.spr);
 		_data->window.draw(ball.spr);
 		_data->window.draw(bat1.spr);
 		_data->window.draw(bat2.spr);

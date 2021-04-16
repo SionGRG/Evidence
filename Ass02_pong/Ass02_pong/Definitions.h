@@ -1,7 +1,7 @@
 #pragma once
 
-#define SCREEN_WIDTH 1366			// window width
-#define SCREEN_HEIGHT 768			// window height
+#define SCREEN_WIDTH	1366			// window width
+#define SCREEN_HEIGHT	768				// window height
 
 /* Game window title */
 #define GAME_TITLE								"Ass02_Pong"		
@@ -25,5 +25,5 @@
 #define FONT_AIRSTREAM_FILEPATH					"data/fonts/Airstream.ttf"
 
 /* Game Variables */
-#define MAX_SCORE 5				// Max score
-#define BALL_SPEED 400			// Ball speed
+#define MAX_SCORE	5				// Max score
+#define BALL_SPEED	400				// Ball speed
