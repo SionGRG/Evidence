@@ -48,8 +48,8 @@ namespace Ass02_pong
 	void Ball::Movement(float dT)
 	{
 		// Move the ball in the random position
-		xVel = GetRandomNumber(2, -2);
-		yVel = GetRandomNumber(2, -2);
+		xVel = GetRandomNumber(1, -1);
+		yVel = GetRandomNumber(1, -1);
 
 		ChangeYDirection(yDir);
 

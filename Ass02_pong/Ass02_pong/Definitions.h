@@ -26,4 +26,4 @@
 
 /* Game Variables */
 #define MAX_SCORE 5				// Max score
-#define BALL_SPEED 350			// Ball speed
+#define BALL_SPEED 400			// Ball speed
