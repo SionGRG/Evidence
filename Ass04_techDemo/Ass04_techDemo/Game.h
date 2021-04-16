@@ -27,7 +27,7 @@ namespace GC {
 	const int MAX_ASTEROIDS = 10;
 	const float ASTEROID_SPEED = SCREEN_WIDTH * .15;
 	const float ASTEROID_SPAWN_DELAY = 0.5f;
-	const float PLAYERHEALTH = 3.f;
+	const float PLAYERHEALTH = SHIP_HEALTH;
 };
 
 class IntroMode : public AMode

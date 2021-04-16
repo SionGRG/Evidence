@@ -1,8 +1,8 @@
 #pragma once
 
 /* Window Dimensions */
-#define SCREEN_WIDTH 1280				// window width
-#define SCREEN_HEIGHT 720				// window height
+#define SCREEN_WIDTH	1280				// window width
+#define SCREEN_HEIGHT	720					// window height
 
 /* Game window title */
 #define GAME_TITLE								"Ass04_SpaceShootertechDemo"		
@@ -26,5 +26,4 @@
 #define THRUST_TEXTURE							"thrust.dds"
 
 /* Game Data Variables */
-#define MAX_SCORE 5						// Max score
-#define BALL_SPEED 350				
+#define SHIP_HEALTH		5						// Max score			

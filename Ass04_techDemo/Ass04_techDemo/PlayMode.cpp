@@ -114,6 +114,7 @@ void Player::Update(float dTime)
 	if (playerHealth <= 0)
 	{
 		Game::Get().GetModeMgr().SwitchMode(GameOverMode::MODE_NAME);
+		playerHealth = GC::PLAYERHEALTH;
 	}
 
 	// Shoot Missiles
@@ -191,6 +192,8 @@ Player::Player()
 void Player::Init()
 {
 	MyD3D& d3d = Game::Get().GetD3D();
+	// set player health
+	playerHealth = GC::PLAYERHEALTH;
 	//load a orientate the ship
 	ID3D11ShaderResourceView *p = d3d.GetCache().LoadTexture(&d3d.GetDevice(), SHIP_TEXTURE);
 	mSpr.SetTex(*p);
@@ -264,14 +267,16 @@ void PlayMode::Update(float dTime)
 		if (mObjects[i]->mActive)
 			mObjects[i]->Update(dTime);	
 
-	// Collisions
-	if ((player->mActive && asteroid->mActive && (player->mSpr.mPos.x > asteroid->mSpr.mPos.x) &&
+	// asteroid Collision with player ship
+	if ((player->mActive && asteroid->mActive &&
+		(player->mSpr.mPos.x > asteroid->mSpr.mPos.x) &&
 		((player->mSpr.mPos.y > asteroid->mSpr.mPos.y - asteroid->mSpr.origin.y) &&
-		(player->mSpr.mPos.y < asteroid->mSpr.mPos.y + asteroid->mSpr.origin.y))))
+		(player->mSpr.mPos.y < asteroid->mSpr.mPos.y + asteroid->mSpr.origin.y))
+		))
 	{
 		asteroid->mActive = false;
-		//player->playerHealth--;
-		Game::Get().GetModeMgr().SwitchMode(GameOverMode::MODE_NAME);
+		player->playerHealth--;
+		//Game::Get().GetModeMgr().SwitchMode(GameOverMode::MODE_NAME);
 	}
 
 	if ((bullet->mActive && asteroid->mActive && (bullet->mSpr.mPos.x > asteroid->mSpr.mPos.x) &&

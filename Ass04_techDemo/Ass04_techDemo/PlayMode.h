@@ -64,7 +64,7 @@ public:
 		mpMyMode = &pm;
 	}
 	int playerScore = 0;
-	float playerHealth = GC::PLAYERHEALTH;
+	float playerHealth = 0;
 private:
 	Sprite mThrust;								//flames out the back
 	//once we start thrusting we have to keep doing it for 
