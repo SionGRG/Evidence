@@ -1,20 +1,30 @@
 #pragma once
 
 /* Window Dimensions */
-#define SCREEN_WIDTH	1280				// window width
-#define SCREEN_HEIGHT	720					// window height
+#define SCREEN_WIDTH	1280			// window width
+#define SCREEN_HEIGHT	720				// window height
 
 /* Game window title */
-#define GAME_TITLE								"Ass04_SpaceShootertechDemo"		
+#define GAME_TITLE								"Space Shooter"		
 
 /* Loading time */
 #define INTRO_SHOW_TIME 2.0					// Intro scene loading time
 
 //#define GAME_TITLE_FILEPATH					"data/gameTitle.png"
 
+
+/* Game User interface */
+#define UI_SHEET_TEXTURE						"data/UI/SpaceShooterUI.dds"
+#define UI_MENU_WIDTH	1280
+#define UI_MENU_HEIGHT	720
+
+
 /* Fonts */
-#define FONT_AIRSTREAM_FILEPATH					"fonts/Airstream.ttf"
-#define FONT_COMIC_FILEPATH						"fonts/comic.ttf"
+//#define FONT_AGENCYFB_FILEPATH					L"data/fonts/AGENCYB.ttf"
+#define FONT_AGENCYFB_FILEPATH					L"data/fonts/bauhaus93Regular_43.spritefont"
+//#define FONT_AGENCYFB_FILEPATH					L"data/fonts/comicSansMS.spritefont"
+#define FONT_AIRSTREAM_FILEPATH					"data/fonts/Airstream.ttf"
+#define FONT_COMIC_FILEPATH						"data/fonts/comic.ttf"
 
 /* Assets and textures */
 #define MOUNTAINS_BACKGROUND_TEXTURE			"bgndMountains.dds"
@@ -26,4 +36,4 @@
 #define THRUST_TEXTURE							"thrust.dds"
 
 /* Game Data Variables */
-#define SHIP_HEALTH		5						// Max score			
+#define SHIP_HEALTH		2						// Max score			

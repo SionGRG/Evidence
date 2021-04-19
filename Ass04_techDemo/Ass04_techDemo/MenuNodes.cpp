@@ -20,7 +20,7 @@ void MenuPage::Render(const ExtraData& rdata, const Vector2& offset, const Vecto
 void MenuButton::Render(const ExtraData& rdata, const Vector2& offset, const Vector2& scale)
 {
 	//where is the button?
-	const TexCache::TexData &data = rdata.texCache.Get(buttons[NORMAL].textureName);
+	const TexCache::TexData& data = rdata.texCache.Get(buttons[NORMAL].textureName);
 	const TexCache::TexData::Sprite* sprite = nullptr;
 	if (!data.frames.empty() && (int)data.frames.size() > buttons[NORMAL].spriteID)
 		sprite = &data.GetSprite(buttons[NORMAL].spriteID);
@@ -56,7 +56,7 @@ void MenuButton::Render(const ExtraData& rdata, const Vector2& offset, const Vec
 //***************************************************************
 void MenuImage::Render(const ExtraData& rdata, const Vector2& offset, const Vector2& scale)
 {
-	const TexCache::TexData &data = rdata.texCache.Get(mTextureName);
+	const TexCache::TexData& data = rdata.texCache.Get(mTextureName);
 	const TexCache::TexData::Sprite* sprite = &data.GetSprite(mSpriteID);
 	RECT dest;
 	GetImageDest(dest, sprite, offset, scale);
@@ -97,5 +97,75 @@ void MenuText::Render(const ExtraData& rdata, const Vector2& offset, const Vecto
 	MenuNode::Render(rdata, pos, scale);
 }
 
+//**********************************************************************************
+void MenuCheckbox::Render(const ExtraData& rdata, const Vector2& offset, const Vector2& scale)
+{
+	Vector2 pos = { offset.x + mX * scale.x, offset.y + mY * scale.y };
+	MenuNode::Render(rdata, pos, scale);
+};
 
 
+
+//***********************************************************************************
+void MenuBox::Render(const ExtraData& rdata, const Vector2& offset, const Vector2& scale)
+{
+	Vector2 pos = { offset.x + mX * scale.x, offset.y + mY * scale.y };
+	MenuNode::Render(rdata, pos, scale);
+};
+
+void MenuBox::BoxItemsPos(MenuBox::Orientation or , MenuBox::Alignment align, int mPos1, float _distance)
+{
+	int _mBoxItemsSize = MenuBox::mChildren.size();
+	mBoxItems = MenuBox::mChildren;
+	if (or == MenuBox::Orientation::HORIZONTAL)
+	{
+		mBoxItems.at(0)->mX = mPos1;
+		for (int i = 1; i < _mBoxItemsSize; i++)
+		{
+			mBoxItems.at(i)->mX = _distance + mBoxItems.at(i - 1)->mX + mBoxItems.at(i - 1)->mW;
+		}
+
+		// set the y position of the elements
+		for (int i = 0; i < _mBoxItemsSize; i++)
+		{
+			if (align == MenuBox::Alignment::TOP)
+			{
+				mBoxItems.at(i)->mY = this->mY;
+			}
+			else if (align == MenuBox::Alignment::CENTER)
+			{
+				mBoxItems.at(i)->mY = this->mH / 2 - (mBoxItems.at(i)->mH / 2);
+			}
+			else if (align == MenuBox::Alignment::BOTTOM)
+			{
+				mBoxItems.at(i)->mY = this->mH - (mBoxItems.at(i)->mH);
+			}
+		}
+	}
+	if (or == MenuBox::Orientation::VERTICAL)
+	{
+		mBoxItems.at(0)->mY = mPos1;
+		for (int i = 1; i < _mBoxItemsSize; i++)
+		{
+			mBoxItems.at(i)->mY = _distance + mBoxItems.at(i - 1)->mY + mBoxItems.at(i - 1)->mH;
+		}
+
+		// set the x position of the elements
+		for (int i = 1; i < _mBoxItemsSize; i++)
+		{
+			// Item alignement :: LEFT or CENTER or RIGHT
+			if (align == MenuBox::Alignment::LEFT)
+			{
+				mBoxItems.at(i)->mX = this->mX;
+			}
+			else if (align == MenuBox::Alignment::CENTER)
+			{
+				mBoxItems.at(i)->mX = this->mW / 2 - (mBoxItems.at(i)->mW / 2);
+			}
+			else if (align == MenuBox::Alignment::RIGHT)
+			{
+				mBoxItems.at(i)->mX = this->mW - (mBoxItems.at(i)->mW);
+			}
+		}
+	}
+}

@@ -22,7 +22,7 @@ const float MenuNode::ZDEPTH_UILAYER = 0.01f;
 
 int MenuMgr::Handler::sId = 0;
 
-MenuNode *MenuNode::GetRoot() 
+MenuNode* MenuNode::GetRoot()
 {
 	if (mType == Type::ROOT)
 		return this;
@@ -30,27 +30,27 @@ MenuNode *MenuNode::GetRoot()
 	return mpParent->GetRoot();
 }
 
-MenuNode *MenuNode::FindNode(const string& name, MenuNode *pIgnore ) 
+MenuNode* MenuNode::FindNode(const string& name, MenuNode* pIgnore)
 {
 	if (this != pIgnore && mName == name)
 		return this;
 	for (MenuNode* n : mChildren)
 	{
-		MenuNode *p = n->FindNode(name, pIgnore);
+		MenuNode* p = n->FindNode(name, pIgnore);
 		if (p)
 			return p;
 	}
 	return nullptr;
 }
 
-void MenuNode::AddChild(MenuNode& child) 
+void MenuNode::AddChild(MenuNode& child)
 {
 	if (GetRoot()->FindNode(child.mName))
 		assert(false);
 	mChildren.push_back(&child);
 }
 
-void MenuNode::SetParent(MenuNode& parent) 
+void MenuNode::SetParent(MenuNode& parent)
 {
 	mpParent = &parent;
 	mpParent->mChildren.push_back(this);
@@ -58,13 +58,17 @@ void MenuNode::SetParent(MenuNode& parent)
 
 MenuNode& MenuNode::CreateNode(const string& type)
 {
-	MenuNode *p = nullptr;
+	MenuNode* p = nullptr;
 	if (type == "Image")
 		return CreateNode(Type::IMAGE);
 	if (type == "Button")
 		return CreateNode(Type::BUTTON);
 	if (type == "Text")
 		return CreateNode(Type::TEXT);
+	if (type == "Checkbox")
+		return CreateNode(Type::CHECKBOX);
+	if (type == "Menubox")
+		return CreateNode(Type::MENUBOX);
 
 	if (type != "Menu")
 	{
@@ -76,7 +80,7 @@ MenuNode& MenuNode::CreateNode(const string& type)
 
 MenuNode& MenuNode::CreateNode(MenuNode::Type type)
 {
-	MenuNode *p = nullptr;
+	MenuNode* p = nullptr;
 	switch (type)
 	{
 	case Type::IMAGE:
@@ -91,6 +95,12 @@ MenuNode& MenuNode::CreateNode(MenuNode::Type type)
 	case Type::TEXT:
 		p = new MenuText();
 		break;
+	case Type::CHECKBOX:
+		p = new MenuCheckbox();
+		break;
+	case Type::MENUBOX:
+		p = new MenuBox();
+		break;
 	default:
 		assert(false);
 	}
@@ -99,7 +109,7 @@ MenuNode& MenuNode::CreateNode(MenuNode::Type type)
 }
 
 
-void MenuNode::GetImageDest(RECT& dest, const Vector2& nPos, const Vector2& nWH, const TexCache::TexData::Sprite *pSprite, const Vector2& offset, const Vector2& scale)
+void MenuNode::GetImageDest(RECT& dest, const Vector2& nPos, const Vector2& nWH, const TexCache::TexData::Sprite* pSprite, const Vector2& offset, const Vector2& scale)
 {
 	Vector2 wh{ nWH };
 	if (pSprite)
@@ -175,7 +185,7 @@ MenuNode& MenuMgr::AddMenu(const char* name, int w, int h)
 }
 
 void MenuMgr::ShowMenu(const string& name) {
-	vector<MenuNode*>::iterator it = find_if(mMenus.begin(), mMenus.end(), [&name](MenuNode*p) { return p->mName == name; });
+	vector<MenuNode*>::iterator it = find_if(mMenus.begin(), mMenus.end(), [&name](MenuNode* p) { return p->mName == name; });
 	assert(it != mMenus.end() && (*it)->mType == MenuNode::Type::ROOT);
 	mpActiveMenu = dynamic_cast<MenuPage*>(*it);
 	assert(mpActiveMenu);
@@ -195,13 +205,13 @@ MenuNode& MenuMgr::CreateNode(MenuNode::Type type)
 }
 
 
-MenuNode &MenuMgr::FindNode(const string& menuName, const string& nodeName) 
+MenuNode& MenuMgr::FindNode(const string& menuName, const string& nodeName)
 {
 	//find the node by name
 	vector<MenuNode*>::iterator it = find_if(mNodes.begin(), mNodes.end(),
 		[&menuName](MenuNode* p) { return p->mType == MenuNode::Type::ROOT && p->mName == menuName; });
 	assert(it != mNodes.end());
-	MenuNode *pN = (*it)->FindNode(nodeName);
+	MenuNode* pN = (*it)->FindNode(nodeName);
 	assert(pN);
 	return *pN;
 }
@@ -220,7 +230,7 @@ void MenuMgr::Render(float dTime, SpriteBatch& spriteBatch, TexCache& texCache, 
 
 void MenuMgr::AddEventHandler(const string& menuName, const string& nodeName, MenuNode::Event etype, Handler func)
 {
-	MenuNode *pN = &FindNode(menuName, nodeName);
+	MenuNode* pN = &FindNode(menuName, nodeName);
 
 	//is there already an event handler?
 	vector<Event>::iterator eit = find_if(mEventHandlers.begin(), mEventHandlers.end(),
@@ -232,7 +242,7 @@ void MenuMgr::AddEventHandler(const string& menuName, const string& nodeName, Me
 }
 void MenuMgr::RemoveEventHandler(const string& menuName, const string& nodeName, MenuNode::Event etype, Handler func)
 {
-	MenuNode *pN = &FindNode(menuName, nodeName);
+	MenuNode* pN = &FindNode(menuName, nodeName);
 	vector<Event>::iterator eit = find_if(mEventHandlers.begin(), mEventHandlers.end(),
 		[etype, pN](Event& e) { return e.etype == etype && e.pNode == pN; });
 	size_t n = (*eit).funcs.size();
@@ -244,7 +254,7 @@ void MenuMgr::RemoveEventHandler(const string& menuName, const string& nodeName,
 
 void MenuMgr::TriggerEvent(MenuNode& node, MenuNode::Event type)
 {
-	std::vector<Event>::iterator it = find_if(mEventHandlers.begin(), mEventHandlers.end(), [&node,&type](Event& event) {
+	std::vector<Event>::iterator it = find_if(mEventHandlers.begin(), mEventHandlers.end(), [&node, &type](Event& event) {
 		return event.etype == type && event.pNode == &node;
 	});
 	if (it == mEventHandlers.end())
@@ -254,7 +264,7 @@ void MenuMgr::TriggerEvent(MenuNode& node, MenuNode::Event type)
 }
 
 
-void Font::Release() 
+void Font::Release()
 {
 	delete mpFont;
 	mpFont = nullptr;
@@ -262,7 +272,7 @@ void Font::Release()
 
 bool Font::Load()
 {
-	assert(!mFileName.empty() && !mName.empty() && mPitch>0);
+	assert(!mFileName.empty() && !mName.empty() && mPitch > 0);
 	delete mpFont;
 	mpFont = new SpriteFont(&WinUtil::Get().GetD3D().GetDevice(), mFileName.c_str());
 	assert(mpFont);
@@ -270,7 +280,7 @@ bool Font::Load()
 }
 
 
-const SpriteFont& MenuMgr::GetFont(const std::string& name, int pitch) const 
+const SpriteFont& MenuMgr::GetFont(const std::string& name, int pitch) const
 {
 	std::vector<Font>::const_iterator it = find_if(mFontCache.begin(), mFontCache.end(), [&name, pitch](const Font& f) {
 		return f.mName == name && pitch == f.mPitch;

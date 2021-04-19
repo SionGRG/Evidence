@@ -41,7 +41,7 @@ public:
 		BUTTON - mouse clickable button
 		TEXT - anywhere we want text, even the text in a button is one of these text nodes
 	*/
-	enum class Type { NONE, ROOT, IMAGE, BUTTON, TEXT };
+	enum class Type { NONE, ROOT, IMAGE, BUTTON, TEXT, CHECKBOX, MENUBOX };
 	enum class Event { NONE, CLICK }; //a mouse click is an event
 	static const float ZDEPTH_UILAYER; //by default all user interface sprites render on this layer
 	std::string mName;			//name of node, unique within one page, but might be duplicated on another page
@@ -71,11 +71,11 @@ public:
 	/*
 	Recursive function to get a link to the root node (there should always be one)
 	*/
-	MenuNode *GetRoot();
+	MenuNode* GetRoot();
 	/*
 	Recursive function to search for a node by name, it searches in this node and all its children
 	*/
-	MenuNode *FindNode(const std::string& name, MenuNode *pIgnore = nullptr);
+	MenuNode* FindNode(const std::string& name, MenuNode* pIgnore = nullptr);
 	/*
 	Add a menu node as a child of this node
 	*/
@@ -85,15 +85,15 @@ public:
 	*/
 	void SetParent(MenuNode& parent);
 
-	void GetImageDest(RECT& dest, const TexCache::TexData::Sprite * sprite, const DirectX::SimpleMath::Vector2& offset, 
+	void GetImageDest(RECT& dest, const TexCache::TexData::Sprite* sprite, const DirectX::SimpleMath::Vector2& offset,
 		const DirectX::SimpleMath::Vector2& scale);
-	static void GetImageDest(RECT& dest, const DirectX::SimpleMath::Vector2& nPos, const DirectX::SimpleMath::Vector2& nWH, 
-		const TexCache::TexData::Sprite *pSprite, const DirectX::SimpleMath::Vector2& offset, const DirectX::SimpleMath::Vector2& scale);
+	static void GetImageDest(RECT& dest, const DirectX::SimpleMath::Vector2& nPos, const DirectX::SimpleMath::Vector2& nWH,
+		const TexCache::TexData::Sprite* pSprite, const DirectX::SimpleMath::Vector2& offset, const DirectX::SimpleMath::Vector2& scale);
 
 
 private:
 
-	MenuNode *mpParent = nullptr;	//my parent
+	MenuNode* mpParent = nullptr;	//my parent
 
 protected:
 	std::vector<MenuNode*> mChildren;	//all my children
@@ -109,8 +109,8 @@ public:
 
 	std::string mName;
 	std::wstring mFileName;
-	DirectX::SpriteFont *mpFont = nullptr;
-	int mPitch=0;
+	DirectX::SpriteFont* mpFont = nullptr;
+	int mPitch = 0;
 };
 
 /*
@@ -146,7 +146,7 @@ public:
 	menuName - which menu has the node in its tree
 	nodeName - what is it called
 	*/
-	MenuNode &FindNode(const std::string& menuName, const std::string& nodeName);
+	MenuNode& FindNode(const std::string& menuName, const std::string& nodeName);
 	/*
 	Render whichever menu screen is active
 	dTime - elapsed time
@@ -186,7 +186,7 @@ public:
 	};
 
 	/*
-	Once we have a function that can respond to a particular UI event, we can add it to the 
+	Once we have a function that can respond to a particular UI event, we can add it to the
 	appropriate menu screen
 	menuName - which screen to add the function to
 	nodeName - which menu node to respond to (like a button)
@@ -224,19 +224,19 @@ private:
 	*/
 	struct Event
 	{
-		Event(MenuNode *_pNode, MenuNode::Event _etype, Handler _func)
+		Event(MenuNode* _pNode, MenuNode::Event _etype, Handler _func)
 		{
 			pNode = _pNode;
 			etype = _etype;
 			funcs.push_back(_func);
 		}
-		MenuNode *pNode;
+		MenuNode* pNode;
 		MenuNode::Event etype;
 		std::vector<Handler> funcs;
 	};
 	std::vector<Event> mEventHandlers;
-	
-	MenuPage *mpActiveMenu = nullptr;	//if the menu system is visible, there will be one active menu
+
+	MenuPage* mpActiveMenu = nullptr;	//if the menu system is visible, there will be one active menu
 
 	std::vector<Font> mFontCache;	//library of fonts
 

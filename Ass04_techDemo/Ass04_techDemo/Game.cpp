@@ -5,6 +5,7 @@
 #include "UIConfig.h"
 #include "MenuMgr.h"
 #include "MenuNodes.h"
+#include "Definitions.h"
 
 using namespace std;
 using namespace DirectX;
@@ -62,19 +63,54 @@ void Game::Render(float dTime)
 void Game::ConfigureUI()
 {
 	mMenuMgr.Reset();
+	// Two button UI
 	vector<TexCache::TexData::Sprite> frames{
 		{{10,10},true,{192,94,192 + 99,94 + 100}},		//blue_panel
-		{{0,0},false,{0,94,0 + 190,94 + 49}},	//blue_button00
-		{{0,0},false,{190,49,190 + 190,49 + 45}},	//blue_button01
-		{{0,0},false,{190,0,190 + 190,0 + 49}},	//blue_button02
+		{{0,0},false,{0,94,0 + 190,94 + 49}},			//blue_button00
+		{{0,0},false,{190,49,190 + 190,49 + 45}},		//blue_button01
+		{{0,0},false,{190,0,190 + 190,0 + 49}},			//blue_button02
 	};
 	mD3D.GetCache().LoadTexture(&mD3D.GetDevice(), "data/blueSheet.dds", "data/blueSheet.dds", false, &frames);
 	mMenuMgr.LoadFont(L"data/fonts/comicSansMS.spritefont", "comicsans", 12);
 	//create an empty menu page for the intro UI
-	MenuNode& root = mMenuMgr.AddMenu("Intro", 512, 256);
-	BuildTwoButtonUI(mMenuMgr, root, 370, 120, "start", "start button", "quit", "quit button");
-	MenuNode& root2 = mMenuMgr.AddMenu("GameOver", 512, 256);
-	BuildTwoButtonUI(mMenuMgr, root2, 370, 120, "restart", "restart button", "quit", "quit button");
+	//MenuNode& root = mMenuMgr.AddMenu("Intro", 512, 256);
+	//BuildTwoButtonUI(mMenuMgr, root, 370, 120, "start", "start button", "quit", "quit button");
+
+	//MenuNode& root2 = mMenuMgr.AddMenu("GameOver", 512, 256);
+	//BuildTwoButtonUI(mMenuMgr, root2, 370, 120, "restart", "restart button", "quit", "quit button");
+
+	// UI Textures and frames 
+	vector<TexCache::TexData::Sprite> mTexFrames{
+		{{528,270},false,{528,270,528+480,270+270}},		//panel
+		{{328,0},false,{328,0,328+200,165}},			//Logo
+		{{0,64},false,{0,64,256,64+64}},						//button_rect
+		{{0,0},false,{0,0,256,64}},						//button_rect_pressed
+		{{0,192},false,{0,192,200,192+128}},			//button_circle
+		{{0,192},false,{0,192,200,192+128}},			//button_circle_pressed
+	};
+	mD3D.GetCache().LoadTexture(&mD3D.GetDevice(), UI_SHEET_TEXTURE, UI_SHEET_TEXTURE, false, &mTexFrames);
+	mMenuMgr.LoadFont(FONT_AGENCYFB_FILEPATH, "agencyfb", 12);
+
+	// Main Menu UI
+	//create an empty menu page for the intro UI
+	MenuNode& root = mMenuMgr.AddMenu("Intro", 1280, 720);
+	BuildMainMenuUI(mMenuMgr, root, 900, 600,
+		"MAIN MENU", GAME_TITLE,
+		"Extras", "extras button",
+		"Options", "options button",
+		"Start", "start button",
+		"Rules", "Rules button",
+		"Quit", "quit button");
+
+	// GameOver Menu UI
+	MenuNode& root2 = mMenuMgr.AddMenu("GameOver", 1280, 720);
+	BuildMainMenuUI(mMenuMgr, root2, 900, 600,
+		"GAME OVER", "Shell",
+		"Scores", "score button",
+		"Options", "options button",
+		"Restart", "restart button",
+		"Rules", "rules button",
+		"Quit", "quit button");
 }
 
 
@@ -90,7 +126,7 @@ IntroMode::IntroMode()
 {
 	mSpr.SetTex(*Game::Get().GetD3D().GetCache().LoadTexture(&Game::Get().GetD3D().GetDevice(), "start1.dds", "start1"));
 	mSpr.SetScale(Vector2(WinUtil::Get().GetClientWidth() / mSpr.GetTexData().dim.x, WinUtil::Get().GetClientHeight() / mSpr.GetTexData().dim.y));
-	
+
 	MenuMgr::Handler h1{ [this](MenuNode& node, MenuNode::Event etype) {HandleUIEvent(node, etype); } };
 	MenuMgr& mgr = Game::Get().GetMenuMgr();
 	mgr.AddEventHandler("Intro", "quit button", MenuNode::Event::CLICK, h1);
@@ -152,9 +188,14 @@ GameOverMode::GameOverMode()
 	: mSpr(Game::Get().GetD3D())
 {
 	mSpr.SetTex(*Game::Get().GetD3D().GetCache().LoadTexture(&Game::Get().GetD3D().GetDevice(), "game_over.dds", "gameover"));
-	float xscale = (WinUtil::Get().GetClientWidth() * 0.8f) / mSpr.GetTexData().dim.x;
-	mSpr.SetScale(Vector2( xscale, xscale));
-	
+
+	float xscale = (WinUtil::Get().GetClientWidth() / mSpr.GetTexData().dim.x) * 0.5f;
+	float yscale = (WinUtil::Get().GetClientHeight() / mSpr.GetTexData().dim.y) * 0.35f;
+	mSpr.SetScale(Vector2(xscale, yscale));
+
+	mSpr.mPos.x = (WinUtil::Get().GetClientWidth() * 0.5f) - (mSpr.GetScreenSize().x / 2);
+	mSpr.mPos.y = (WinUtil::Get().GetClientHeight() * 0.5f) - (mSpr.GetScreenSize().y / 2);
+
 	MenuMgr::Handler h1{ [this](MenuNode& node, MenuNode::Event etype) {HandleUIEvent(node, etype); } };
 	MenuMgr& mgr = Game::Get().GetMenuMgr();
 	mgr.AddEventHandler("GameOver", "quit button", MenuNode::Event::CLICK, h1);
