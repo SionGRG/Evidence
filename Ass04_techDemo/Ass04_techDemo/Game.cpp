@@ -81,38 +81,37 @@ void Game::ConfigureUI()
 
 	// UI Textures and frames 
 	vector<TexCache::TexData::Sprite> mTexFrames{
-		{{528,270},false,{528,270,528+480,270+270}},		//panel
+		{{528,270},false,{528,270,528+480,270+270}},	//panel
 		{{328,0},false,{328,0,328+200,165}},			//Logo
-		{{0,64},false,{0,64,256,64+64}},						//button_rect
+		{{0,64},false,{0,64,256,64+64}},				//button_rect
 		{{0,0},false,{0,0,256,64}},						//button_rect_pressed
 		{{0,192},false,{0,192,200,192+128}},			//button_circle
 		{{0,192},false,{0,192,200,192+128}},			//button_circle_pressed
 	};
 	mD3D.GetCache().LoadTexture(&mD3D.GetDevice(), UI_SHEET_TEXTURE, UI_SHEET_TEXTURE, false, &mTexFrames);
-	mMenuMgr.LoadFont(FONT_AGENCYFB_FILEPATH, "agencyfb", 12);
+	mMenuMgr.LoadFont(FONT_AGENCYFB_FILEPATH, "agencyfb", 48);
 
 	// Main Menu UI
 	//create an empty menu page for the intro UI
 	MenuNode& root = mMenuMgr.AddMenu("Intro", 1280, 720);
-	BuildMainMenuUI(mMenuMgr, root, 900, 600,
+	BuildMainMenuUI(mMenuMgr, root, 900, 600, 48,
 		"MAIN MENU", GAME_TITLE,
-		"Extras", "extras button",
-		"Options", "options button",
-		"Start", "start button",
-		"Rules", "Rules button",
-		"Quit", "quit button");
+		"EXTRAS", "extras button",
+		"OPTIONS", "options button",
+		"START", "start button",
+		"RULES", "Rules button",
+		"QUIT", "quit button");
 
 	// GameOver Menu UI
 	MenuNode& root2 = mMenuMgr.AddMenu("GameOver", 1280, 720);
-	BuildMainMenuUI(mMenuMgr, root2, 900, 600,
+	BuildGameOverMenuUI(mMenuMgr, root2, 900, 600, 48,
 		"GAME OVER", "Shell",
-		"Scores", "score button",
-		"Options", "options button",
-		"Restart", "restart button",
-		"Rules", "rules button",
-		"Quit", "quit button");
+		"SCORES", "score button",
+		"OPTIONS", "options button",
+		"RESTART", "restart button",
+		"RULES", "rules button",
+		"QUIT", "quit button");
 }
-
 
 //****************************************************************
 

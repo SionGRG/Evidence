@@ -25,6 +25,7 @@ void BuildTwoButtonUI(MenuMgr& mgr, MenuNode& root, float x, float y, const std:
 	mgr - the one and only menumgr
 	root - a root node that this menu button setup can attach to, so if you want this
 	menu button group on ten different menu screens then just call it ten times and attach to ten different roots
+	mTxtPitch - the pitch of the text or font size
 	mT - the menu title
 	mTName - the internal logical name for the menu title
 	mL - the menu logo
@@ -33,7 +34,16 @@ void BuildTwoButtonUI(MenuMgr& mgr, MenuNode& root, float x, float y, const std:
 	b1Name,b2Name,b3Name... - this is the internal logical name for the buttons, so you can hook up event handlers to them
 */
 void BuildMainMenuUI(MenuMgr& mgr, MenuNode& root, float x, float y,
-	const std::string& mT, const std::string& mL,
+	int mTxtPitch,	const std::string& mT, const std::string& mL,
+	const std::string& b1, const std::string& b1Name,
+	const std::string& b2, const std::string& b2Name,
+	const std::string& b3, const std::string& b3Name,
+	const std::string& b4, const std::string& b4Name,
+	const std::string& b5, const std::string& b5Name
+);
+
+void BuildGameOverMenuUI(MenuMgr& mgr, MenuNode& root, float x, float y,
+	int mTxtPitch,	const std::string& mT, const std::string& mL,
 	const std::string& b1, const std::string& b1Name,
 	const std::string& b2, const std::string& b2Name,
 	const std::string& b3, const std::string& b3Name,

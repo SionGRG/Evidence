@@ -20,11 +20,8 @@
 
 
 /* Fonts */
-//#define FONT_AGENCYFB_FILEPATH					L"data/fonts/AGENCYB.ttf"
-#define FONT_AGENCYFB_FILEPATH					L"data/fonts/bauhaus93Regular_43.spritefont"
-//#define FONT_AGENCYFB_FILEPATH					L"data/fonts/comicSansMS.spritefont"
-#define FONT_AIRSTREAM_FILEPATH					"data/fonts/Airstream.ttf"
-#define FONT_COMIC_FILEPATH						"data/fonts/comic.ttf"
+#define FONT_AGENCYFB_FILEPATH					L"data/fonts/AgencyFB.spritefont"
+#define FONT_COMIC_FILEPATH						L"data/fonts/comic.ttf"
 
 /* Assets and textures */
 #define MOUNTAINS_BACKGROUND_TEXTURE			"bgndMountains.dds"
