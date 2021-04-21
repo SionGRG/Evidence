@@ -122,6 +122,7 @@ void Player::Update(float dTime)
 		(gm.mGamepads.IsConnected(0) && gm.mGamepads.IsPressed(0, XINPUT_GAMEPAD_A))) &&
 		GetClock() > mFireTimer)
 	{
+		GameObj* pM = mpMyMode->FindFirst(typeid(Bullet), false);
 		if (pM) {
 			pM->mActive = true;
 			pM->mSpr.mPos = Vector2(mSpr.mPos.x + mSpr.GetScreenSize().x / 2.f, mSpr.mPos.y);
@@ -129,6 +130,7 @@ void Player::Update(float dTime)
 		}
 	}
 
+	// Update ship thrust
 	if (mThrusting)
 	{
 		mThrust.mPos = mSpr.mPos;
@@ -239,7 +241,12 @@ PlayMode::PlayMode()
 	player->mActive = true;
 	Add(player);
 	
-	Add(bullet);
+	// add bullets
+		Add(bullet);
+	//for (int i = 0; i < 10; ++i)
+		//Add(new Bullet(Game::Get().GetD3D()));
+
+
 	Add(asteroid);
 		
 }
@@ -268,25 +275,36 @@ void PlayMode::Update(float dTime)
 			mObjects[i]->Update(dTime);	
 
 	// asteroid Collision with player ship
-	if ((player->mActive && asteroid->mActive &&
-		(player->mSpr.mPos.x > asteroid->mSpr.mPos.x) &&
-		((player->mSpr.mPos.y > asteroid->mSpr.mPos.y - asteroid->mSpr.origin.y) &&
-		(player->mSpr.mPos.y < asteroid->mSpr.mPos.y + asteroid->mSpr.origin.y))
-		))
+	if (player->mActive && asteroid->mActive)
 	{
-		asteroid->mActive = false;
-		player->playerHealth--;
-		//Game::Get().GetModeMgr().SwitchMode(GameOverMode::MODE_NAME);
+		if ((player->mSpr.mPos.y > asteroid->mSpr.mPos.y - asteroid->mSpr.origin.y) &&
+			(player->mSpr.mPos.y < asteroid->mSpr.mPos.y + asteroid->mSpr.origin.y))
+		{
+			if ((player->mSpr.mPos.x > asteroid->mSpr.mPos.x) &&
+				(player->mSpr.mPos.x < asteroid->mSpr.mPos.x + asteroid->mSpr.origin.x))
+			{
+				asteroid->mActive = false;
+				player->playerHealth--;
+				//Game::Get().GetModeMgr().SwitchMode(GameOverMode::MODE_NAME);
+			}
+		}
 	}
 
-	if ((bullet->mActive && asteroid->mActive && (bullet->mSpr.mPos.x > asteroid->mSpr.mPos.x) &&
-		((bullet->mSpr.mPos.y > asteroid->mSpr.mPos.y - asteroid->mSpr.origin.y) &&
-		 (bullet->mSpr.mPos.y < asteroid->mSpr.mPos.y + asteroid->mSpr.origin.y))))
+	// asteroid Collision with ship missiles
+	if (bullet->mActive && asteroid->mActive)
 	{
-		player->playerScore += 10;
-		bullet->mActive = false;
-		asteroid->mActive = false;
-		RecordScore = player->playerScore;
+		if (((bullet->mSpr.mPos.y > asteroid->mSpr.mPos.y - asteroid->mSpr.origin.y) &&
+			(bullet->mSpr.mPos.y < asteroid->mSpr.mPos.y + asteroid->mSpr.origin.y)))
+		{
+			if ((bullet->mSpr.mPos.x > asteroid->mSpr.mPos.x) &&
+				(bullet->mSpr.mPos.x < asteroid->mSpr.mPos.x + asteroid->mSpr.origin.x))
+			{
+				player->playerScore += 10;
+				bullet->mActive = false;
+				asteroid->mActive = false;
+				RecordScore = player->playerScore;
+			}
+		}
 	}
 }
 

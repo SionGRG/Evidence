@@ -1,14 +1,14 @@
 #pragma once
 
 /* Window Dimensions */
-#define SCREEN_WIDTH	1280			// window width
-#define SCREEN_HEIGHT	720				// window height
+#define SCREEN_WIDTH	1280					// window width
+#define SCREEN_HEIGHT	720						// window height
 
 /* Game window title */
 #define GAME_TITLE								"Space Shooter"		
 
 /* Loading time */
-#define INTRO_SHOW_TIME 2.0					// Intro scene loading time
+#define INTRO_SHOW_TIME 2.0						// Intro scene loading time
 
 //#define GAME_TITLE_FILEPATH					"data/gameTitle.png"
 
