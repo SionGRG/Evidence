@@ -105,8 +105,8 @@ void Game::ConfigureUI()
 	// GameOver Menu UI
 	MenuNode& root2 = mMenuMgr.AddMenu("GameOver", 1280, 720);
 	BuildGameOverMenuUI(mMenuMgr, root2, 900, 600, 48,
-		"GAME OVER", "Shell",
-		"SCORES", "score button",
+		"GAME OVER", GAME_TITLE,
+		"SCORES", "scores button",
 		"OPTIONS", "options button",
 		"RESTART", "restart button",
 		"RULES", "rules button",
