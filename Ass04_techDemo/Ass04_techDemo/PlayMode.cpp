@@ -88,7 +88,6 @@ void Asteroid::Update(float dTime)
 //...To be implemented
 
 
-
 //****************************************************************
 
 void Player::Update(float dTime)
@@ -241,12 +240,10 @@ PlayMode::PlayMode()
 	player->mActive = true;
 	Add(player);
 	
-	// add bullets
-		Add(bullet);
-	//for (int i = 0; i < 10; ++i)
-		//Add(new Bullet(Game::Get().GetD3D()));
+	// add bullet
+	Add(bullet);
 
-
+	// add asteroid
 	Add(asteroid);
 		
 }

@@ -83,7 +83,7 @@ public:
 
 /*
 	A box container that stores items
-	forexample: buttons,texts, etc
+	forexample: buttons, texts, etc
 	and are grouped and thus can be moved together
 */
 class MenuBox : public MenuNode

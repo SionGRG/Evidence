@@ -17,7 +17,6 @@ b1Name,b2Name - this is the internal logical name for the buttons, so you cna ho
 void BuildTwoButtonUI(MenuMgr& mgr, MenuNode& root, float x, float y, const std::string& b1, const std::string& b1Name, const std::string& b2, const std::string& b2Name);
 
 
-
 /*
 	Creates a window frame with the menu buttons in it
 	The code to configure the elements is long and cumbersome so

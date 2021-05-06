@@ -66,8 +66,6 @@ void MenuImage::Render(const ExtraData& rdata, const Vector2& offset, const Vect
 
 
 //*********************************************************************
-
-//Vector2 MenuText::Render(const Vector2& pos, const Vector2& wh, const ExtraData& rdata, const Vector2& offset, const Vector2& scale, const string& fontName, int pitch, const string& text, float layer)
 Vector2 MenuText::Render(const TextData& d)
 {
 	RECT dest;
@@ -91,8 +89,6 @@ Vector2 MenuText::Render(const TextData& d)
 
 void MenuText::Render(const ExtraData& rdata, const Vector2& offset, const Vector2& scale)
 {
-	//Vector2 pos = Render(Vector2((float)mX, (float)mY), Vector2((float)mW, (float)mH), rdata, offset, scale, mFont, mPitch, mText, MenuNode::ZDEPTH_UILAYER);
-	//MenuNode::Render(rdata, pos, scale);
 	Vector2 pos = Render(TextData{ Vector2((float)mX, (float)mY), Vector2((float)mW, (float)mH), &rdata, offset, scale, &mFont, mPitch, &mText, MenuNode::ZDEPTH_UILAYER });
 	MenuNode::Render(rdata, pos, scale);
 }

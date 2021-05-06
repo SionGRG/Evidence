@@ -63,22 +63,6 @@ void Game::Render(float dTime)
 void Game::ConfigureUI()
 {
 	mMenuMgr.Reset();
-	// Two button UI
-	vector<TexCache::TexData::Sprite> frames{
-		{{10,10},true,{192,94,192 + 99,94 + 100}},		//blue_panel
-		{{0,0},false,{0,94,0 + 190,94 + 49}},			//blue_button00
-		{{0,0},false,{190,49,190 + 190,49 + 45}},		//blue_button01
-		{{0,0},false,{190,0,190 + 190,0 + 49}},			//blue_button02
-	};
-	mD3D.GetCache().LoadTexture(&mD3D.GetDevice(), "data/blueSheet.dds", "data/blueSheet.dds", false, &frames);
-	mMenuMgr.LoadFont(L"data/fonts/comicSansMS.spritefont", "comicsans", 12);
-	//create an empty menu page for the intro UI
-	//MenuNode& root = mMenuMgr.AddMenu("Intro", 512, 256);
-	//BuildTwoButtonUI(mMenuMgr, root, 370, 120, "start", "start button", "quit", "quit button");
-
-	//MenuNode& root2 = mMenuMgr.AddMenu("GameOver", 512, 256);
-	//BuildTwoButtonUI(mMenuMgr, root2, 370, 120, "restart", "restart button", "quit", "quit button");
-
 	// UI Textures and frames 
 	vector<TexCache::TexData::Sprite> mTexFrames{
 		{{528,270},false,{528,270,528+480,270+270}},	//panel
